@@ -535,4 +535,14 @@ lsof |grep delete
 kill -9 进程号
 ```
 
- 
+
+## 空间清理
+
+1.统计文件数量
+
+查询当前目录下有多少个pdf文件
+
+```bash
+find . -type f -name "*.pdf" | wc -l
+```
+
