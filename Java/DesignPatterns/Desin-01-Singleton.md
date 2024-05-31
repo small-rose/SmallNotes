@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Design Patterns
-parent: Java
-has_children: true
+title: Singleton
+parent: Design Patterns
+has_children: false
 nav_order: 10
 ---
 
