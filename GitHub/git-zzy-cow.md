@@ -28,8 +28,11 @@ nav_order: 20
 前置准备:
 
 1）微信公众号1个
+
 2）云服务器
+
 3）nginx环境
+
 4）docker环境
 
 
@@ -115,6 +118,8 @@ server {
     }
 }
 ```
+
+docker-compose.yml 文件配置
 
 ```yaml
 ersion: '2.0'
