@@ -344,4 +344,15 @@ GitHub加速下载
 </div>
 
 
+### GAMES
+
+<div class="grid grid-4">
+<a href="https://github.com/zhayujie/chatgpt-on-wechat" titel="https://github.com/zhayujie/chatgpt-on-wechat" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">chatgpt-on-wechat</a>
+<a href="https://github.com/ngc660sec/NGCBot" titel="https://github.com/zhayujie/NGCBot" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">NGCBot</a>
+<a href="https://github.com/opentdp/wrest-chat" titel="https://github.com/opentdp/wrest-chat" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">wrest-chat</a>
+</div>
+
+
+
+
 
