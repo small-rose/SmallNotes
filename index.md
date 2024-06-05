@@ -7,7 +7,7 @@ permalink: /
 ---
 
 
-## Note-Docs
+## NoteDocs
 {: .fs-9 }
 
  Here are just some things that may be used in the normal development process, which may help to query in real time, or quickly find the entrance of a website, so as to avoid repeated search with search engines 
