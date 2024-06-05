@@ -10,6 +10,7 @@ parent: Database
 
 ## Table of contents
 {: .no_toc .text-delta }
+这里主要放一些实用的工具SQL，按不同的数据库分类。
 
 1. TOC
 {:toc}
@@ -17,7 +18,7 @@ parent: Database
 --- 
 
 
-工具SQL
+
 -------------------------
 
 ## ORACLE
