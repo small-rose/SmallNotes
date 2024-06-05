@@ -103,7 +103,24 @@ File ->Settings -> Appearance & Behavior  -> File Colors  ，
 选择+号 选择Project  file
 
 
+## Idea字符集乱码
 
+VM Options :  -Dfile.encoding=URF-8
+
+## Idea自动导包
+
+setting -> Editor -> Auto Import
+
+- 勾选 Add unambiguous imports on the fly
+- 勾选 Optimize imports on the fly
+
+## Idea禁止导*
+
+setting -> Editor -> Code Style –> Java –> Imports
+
+- 勾选 Use single class import
+- Class count to use import with *  :  99999
+- Names count to use static import with * : 99999
 
 
 ## idea好用的插件
