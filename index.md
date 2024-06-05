@@ -24,7 +24,7 @@ permalink: /
 ![LOGO](https://cdn.jsdelivr.net/gh/small-rose/small-rose.github.io/favicon.ico)
 
 
-![Link-ai](https://link-ai.tech/console/account)
+[Link-ai签到](https://link-ai.tech/console/account)
 
 
 ### 1. 制作一份待办事宜
