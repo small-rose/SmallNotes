@@ -123,6 +123,39 @@ setting -> Editor -> Code Style –> Java –> Imports
 - Names count to use static import with * : 99999
 
 
+## Idea内存使用优化
+
+开启idea底下的工具栏 memory indicator 的展示。
+
+修改VM参数： 
+
+针对当前用户的修改
+> Help -> Edit Custom VM Options....
+
+针对当idea的修改
+> JetBrains\IntelliJ IDEA 2020.1\bin\idea64.exe.vmoptions
+
+```text
+-Xms1024m
+-Xmx2048m
+-XX:MaxMetaspaceSize=512m
+-XX:ReservedCodeCacheSize=256m
+-XX:+UseG1GC
+-XX:SoftRefLRUPolicyMSPerMB=50
+-ea
+-XX:CICompilerCount=2
+-Dsun.io.useCanonPrefixCache=false
+-Djdk.http.auth.tunneling.disabledSchemes=""
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:-OmitStackTraceInFastThrow
+-Djdk.attach.allowAttachSelf=true
+-Dkotlinx.coroutines.debug=off
+-Djdk.module.illegalAccess.silent=true
+-Dfile.encoding=UTF-8
+```
+
+
+
 ## idea好用的插件
 
 IDE Eval Reset : 试用插件
