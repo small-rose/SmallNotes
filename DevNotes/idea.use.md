@@ -154,6 +154,29 @@ setting -> Editor -> Code Style –> Java –> Imports
 -Dfile.encoding=UTF-8
 ```
 
+## 常用的快捷键
+
+用于在IDEA中查看类结构和方法结构：
+
+查看类结构
+
+    Ctrl + H（或Cmd + H在Mac上）：这个快捷键用于查看当前类的层次结构，包括它的父类、实现的接口以及继承关系等。这是理解类在项目中位置和作用的重要工具。
+    Alt + 7：在IDEA中，你也可以通过按下Alt键和数字7的组合键来打开Structure视图，该视图展示了当前类的字段、方法、内部类等结构信息。
+    Ctrl + F12：这个快捷键可以显示当前文件的结构，允许你快速跳转到文件中的任何方法、字段或属性。
+
+查看方法结构
+
+    Alt + 7 打开Structure视图后，你可以在其中看到当前类的所有方法，并且可以通过点击来跳转到具体的方法实现。
+    Ctrl + B（或Cmd + B在Mac上）：这个快捷键用于跳转到方法或变量的声明处。如果你想查看某个方法的具体实现，特别是当它在接口中被声明时，这个快捷键非常有用。
+    Ctrl + Alt + B：这个快捷键更进一步，它允许你跳转到方法的具体实现处，而不是仅仅停留在声明处。这对于理解接口的具体实现非常有帮助。
+
+其他相关快捷键
+
+    Ctrl + N：根据输入的类名快速查找并打开类文件。
+    Ctrl + F：在当前文件中查找文本。
+    Ctrl + Shift + F：在项目中查找文本，可以指定搜索范围。
+    Alt + Insert：自动生成代码，如getter/setter方法、构造函数等。
+    Ctrl + Alt + L：格式化代码，使代码更加整洁易读。
 
 
 ## idea好用的插件
@@ -204,7 +227,7 @@ settings-live template
 
 模板：
 
-```java
+```txt
 log.debug("$METHOD_NAME$::$PLACE_HOLDERS$",$ARGUMENTS$);
 ```
 
@@ -219,13 +242,13 @@ methodName()
 
 PLACE_HOLDERS 变量
 
-```groovy
+```txt
 groovyScript("_1.collect { it + ' = [{}]'}.join(', ') ", methodParameters())
 ```
 
 ARGUMENTS 变量
 
-```groovy
+```txt
 groovyScript( 
 "def result=''; 
 def params=\"${_1}\".replaceAll('[\\\\[|\\\\]|\\\\s]', '').split(',').toList(); 
@@ -240,13 +263,13 @@ for(i = 0; i < params.size(); i++) {
 
 PLACE_HOLDERS 变量
 
-```groovy
+```txt
 groovyScript("def params = _2.collect {'【'+it+' = {}】'}.join(', '); return '\"' + _1 + '() called with parameters => ' + (params.empty  ? '' : params) + '\"'", methodName(), methodParameters())
 ```
 
 ARGUMENTS 变量
 
-```groovy
+```txt
 groovyScript("def params = _1.collect {it}.join(', '); return   (params.empty  ? '' : params) ",  methodParameters())
 ```
 
@@ -257,21 +280,21 @@ groovyScript("def params = _1.collect {it}.join(', '); return   (params.empty  ?
 命名：logm
 
 模板：
-```java
+```txt
 log.info($content$,$params$);
 ```
 
 变量：
 
 content变量：
-```groovy
+```txt
 groovyScript(
 "def params = _2.collect {'【'+it+' = {}】'}.join(', '); 
 return '\"' + _1 + '() called with parameters => ' + (params.empty  ? '' : params) + '\"'", methodName(), methodParameters())
 ```
 
 params变量：
-```groovy
+```txt
 groovyScript(
 "def params = _1.collect {it}.join(', '); 
 return   (params.empty  ? '' : params) ",  methodParameters())
@@ -285,15 +308,17 @@ return   (params.empty  ? '' : params) ",  methodParameters())
 
 模板：
 
-```java
+```txt
 log.info("$METHOD_NAME$() returned: " +  $result$);
 ```
 
 变量：
-```
+
+```txt
 METHOD_NAME 变量:    methodName()
 result 变量:     variableOfType(methodReturnType())
 ```
+
 -------------------------------------------------
 
 
