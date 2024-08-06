@@ -2,14 +2,14 @@
 layout: default
 title: SpringBoot upgrate
 parent: SpringBoot
-nav_order: 666
+nav_order: 600
 ---
 
 ## SpringBoot 升级关注事项
 
 > 一般为现有组件安全漏洞多，需要升级到无安全漏洞版本。
 
-### 版本适配
+### 一、版本适配
 
 SpringBoot 1.5.13.RELEASE 升级 SpringBoot 2.5.12
 
@@ -87,7 +87,7 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
 工具类组件: snakeyaml、xstream、json、fastjson、kaptcha、hutool、commons-系列
 
 
-### 配置或API适配
+### 二、配置或API适配
 
 相关组件更换版本后，更新maven或者gradle版本环境，刷新maven或gradle,使用升级以后组件进行代码编译。
 
@@ -117,6 +117,6 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
    - api与原有兼容，但是逻辑意义发生变化   
    - api重写兼容，需要调整参数，2个参数变3个参数
    
-### 全量功能测试
+### 三、全量功能测试
 
 全面功能覆盖测试，保证功能正常。   
