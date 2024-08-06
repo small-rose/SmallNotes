@@ -187,8 +187,8 @@ user:
   name: smale-rose
   email: ${random.value}_small-rose@qq.com
   age: ${random.int[10,50]}
-  addr: Address_${user.name: no_user}
-  last_name: LastName_${user.lastName: no_user}
+  addr: Address_${user.name:no_user}
+  last_name: LastName_${user.lastName:no_user}
 ```
 
 
@@ -199,8 +199,8 @@ user:
 
 （1）可以引入配置文件处理
 
-```xml
-<!‐‐导入配置文件处理器，配置文件进行绑定就会有提示‐‐>
+```txt
+<!‐‐ 导入配置文件处理器，配置文件进行绑定就会有提示‐ ‐>
 <dependency>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring‐boot‐configuration‐processor</artifactId>
@@ -277,7 +277,7 @@ public class InitValueConfig {
 
 **@ImportResource**：导入Spring的配置文件，让配置文件里面的内容生效；
 
-```java
+```txt
 @ImportResource(locations = {"classpath:beans.xml"})
 ```
 
