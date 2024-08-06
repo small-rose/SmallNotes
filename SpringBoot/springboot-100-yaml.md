@@ -2,7 +2,7 @@
 layout: default
 title: SpringBoot YAML
 parent: SpringBoot
-has_children: true
+has_children: false
 nav_order: 10
 ---
 
