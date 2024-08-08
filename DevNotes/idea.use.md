@@ -235,20 +235,20 @@ log.debug("$METHOD_NAME$::$PLACE_HOLDERS$",$ARGUMENTS$);
 
 METHOD_NAME 
 
-```
+```txt
 # 打印方法名称
 methodName()
 ```
 
 PLACE_HOLDERS 变量
 
-```txt
+```groovy
 groovyScript("_1.collect { it + ' = [{}]'}.join(', ') ", methodParameters())
 ```
 
 ARGUMENTS 变量
 
-```txt
+```groovy
 groovyScript( 
 "def result=''; 
 def params=\"${_1}\".replaceAll('[\\\\[|\\\\]|\\\\s]', '').split(',').toList(); 
@@ -263,13 +263,13 @@ for(i = 0; i < params.size(); i++) {
 
 PLACE_HOLDERS 变量
 
-```txt
+```groovy
 groovyScript("def params = _2.collect {'【'+it+' = {}】'}.join(', '); return '\"' + _1 + '() called with parameters => ' + (params.empty  ? '' : params) + '\"'", methodName(), methodParameters())
 ```
 
 ARGUMENTS 变量
 
-```txt
+```groovy
 groovyScript("def params = _1.collect {it}.join(', '); return   (params.empty  ? '' : params) ",  methodParameters())
 ```
 
@@ -280,21 +280,21 @@ groovyScript("def params = _1.collect {it}.join(', '); return   (params.empty  ?
 命名：logm
 
 模板：
-```txt
+```
 log.info($content$,$params$);
 ```
 
 变量：
 
 content变量：
-```txt
+```groovy
 groovyScript(
 "def params = _2.collect {'【'+it+' = {}】'}.join(', '); 
 return '\"' + _1 + '() called with parameters => ' + (params.empty  ? '' : params) + '\"'", methodName(), methodParameters())
 ```
 
 params变量：
-```txt
+```groovy
 groovyScript(
 "def params = _1.collect {it}.join(', '); 
 return   (params.empty  ? '' : params) ",  methodParameters())
@@ -308,13 +308,13 @@ return   (params.empty  ? '' : params) ",  methodParameters())
 
 模板：
 
-```txt
+```
 log.info("$METHOD_NAME$() returned: " +  $result$);
 ```
 
 变量：
 
-```txt
+```
 METHOD_NAME 变量:    methodName()
 result 变量:     variableOfType(methodReturnType())
 ```
