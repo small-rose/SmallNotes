@@ -5,6 +5,15 @@ parent: SpringBoot
 nav_order: 600
 ---
 
+Here are SpringBoot upgrade experience .
+{: .fs-6 .fw-300 }
+
+
+## Table of contents
+{: .no_toc .text-delta }
+
+
+
 ## SpringBoot 升级关注事项
 
 > 一般为现有组件安全漏洞多，需要升级到无安全漏洞版本。
@@ -13,7 +22,7 @@ nav_order: 600
 
 SpringBoot 1.5.13.RELEASE 升级 SpringBoot 2.5.12
 
-### 主干版本适配
+**1、主干版本适配**
 
 主干版本主要是指以 SpringBoot 为主干框架的依赖，主要包含 SpringBoot系列starter, 依赖特征是 spring-boot-starter-xxx
 
@@ -41,7 +50,7 @@ compile('org.springframework.boot:spring-boot-starter-test')
 升级目标版本组件依赖: [spring-boot-2.5.13#dependency-versions](https://docs.spring.io/spring-boot/docs/2.5.13/reference/html/dependency-versions.html#appendix.dependency-versions)
 
  
-### 依赖主干版本组件适配
+**2.依赖主干版本组件适配**
 
 兼容主干版本组件主要是依托springboot系的组件, 或者依托spring系的组件，前者依赖特征一般是:
  
@@ -81,8 +90,7 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
 > 另外，无论是何种组件，升级后会有可能会导致依赖包变动。如果依赖包减少，导包变红，需要对比组件，额外引入减少的依赖包。如果是依赖包增加，一般问题比较少，最好是在无影响的情况下将额外引入的依赖去除。
 
 
-
-### 辅助组件版本适配
+**3.辅助组件版本适配**
 
 辅助组件版本一般涉及功能组件、或工具组件。
 
