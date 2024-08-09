@@ -177,3 +177,62 @@ git push
 #初次拉取工程(克隆)
 git clone <远程仓库地址>
 ```
+
+
+
+## commit 后悔
+
+undo commit 和 revert commit区别
+
+操作的对象和影响范围
+
+‌undo commit和‌revert commit的主要区别在于操作的对象和影响范围。
+
+定义和操作方式
+   - undo commit：用于撤销最近一次的本地commit操作，不会影响已经推送到远程仓库的commit记录。可以通过git reset HEAD^命令来实现。‌12
+   - revert commit：用于撤销已经提交到远程仓库的commit，同时保留这些commit的历史记录。可以通过git revert <commit_id>命令来实现。
+
+适用场景
+   - undo commit：当你需要撤销本地的commit操作，且这些操作尚未推送到远程仓库时，可以使用undo commit。这适用于在本地修改代码后，发现还需要进一步修改，但又不想增加新的commit记录的情况。‌2
+   - revert commit：当你需要撤销已经提交到远程仓库的commit时，且需要保留这些commit的历史记录时，可以使用revert commit。这适用于团队协作和版本控制中的情况，比如需要撤销某个有问题的commit，但保留其历史记录。
+
+影响范围
+
+   - undo commit：只能撤销本地的commit记录，不会影响已经推送到远程仓库的commit记录。‌1
+   - revert commit：可以撤销远程仓库中的commit记录，同时保留这些记录的历史信息。
+
+总之，当你需要撤销本地的commit操作时，可以使用undo commit；当你需要撤销已经提交到远程仓库的commit时，且需要保留这些commit的历史记录时，可以使用revert commit。
+
+
+## push 后悔
+
+确定你想要撤销的commit的哈希值。你可以通过git log来查看提交历史。
+
+执行git revert命令，并指定你想要撤销的commit的哈希值。
+
+```bash
+git revert <commit-hash>
+```
+
+解决可能出现的任何冲突。然后提交这个新的revert commit。
+
+
+```bash
+git commit -m "Revert \"<commit-message>\""
+```
+
+将revert commit push到远程仓库。
+
+```bash
+git push origin <branch-name>
+```
+
+例如，如果想要撤销哈希值为c6bfc89e的commit，可以这样做：
+
+```bash
+git revert c6bfc89e
+git commit -m "Revert \"commit message\""
+git push origin main
+```
+
+请注意，如果你的项目是一个共享的项目，撤销一个公共的commit可能会影响其他协作者。在执行这样的操作之前，最好通知团队成员。 
