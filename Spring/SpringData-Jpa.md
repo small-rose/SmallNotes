@@ -355,11 +355,13 @@ Query createQuery(String qlString)
 
 命令参数
 ```
-Query query = em.createQuery("select p from Person p where p.personid=:Id"); query.setParameter("Id",new Integer(1));
+Query query = em.createQuery("select p from Person p where p.personid=:Id"); 
+query.setParameter("Id",new Integer(1));
 ```
 位置参数
 ```
-Query query = em.createQuery("select p from Person p where p.personid=?1"); query.setParameter(1,new Integer(1));
+Query query = em.createQuery("select p from Person p where p.personid=?1"); 
+query.setParameter(1,new Integer(1));
 ```
 
 ### 4.2 命名查询
@@ -372,7 +374,10 @@ Query query = em.createQuery("select p from Person p where p.personid=?1"); quer
 ```
 @NamedQuery(name="getPerson", query= "FROM Person WHERE personid=?1")
 
-@NamedQueries({ @NamedQuery(name="getPerson1", query= "FROM Person WHERE personid=?1"), @NamedQuery(name="getPersonList", query= "FROM Person WHERE age>?1") })
+@NamedQueries({ 
+    @NamedQuery(name="getPerson1", query= "FROM Person WHERE personid=?1"), 
+    @NamedQuery(name="getPersonList", query= "FROM Person WHERE age>?1") 
+})
 
 Query query = em.createNamedQuery("getPerson");
 ```
@@ -387,7 +392,9 @@ Query query = em.createQuery("select p from Person p order by p.age, p.birthday 
 
 JPQL支持AVG、SUM、COUNT、MAX、MIN五个聚合函数。例如：
 ```
-Query query = em.createQuery("select max(p.age) from Person p"); Object result = query.getSingleResult(); String maxAge = result.toString();
+Query query = em.createQuery("select max(p.age) from Person p"); 
+Object result = query.getSingleResult(); 
+String maxAge = result.toString();
 ```
 
 ### 4.5 更新和删除
@@ -396,14 +403,435 @@ JPQL不仅用于查询，还可以用于批量更新和删除。
 
 如：
 ```
-Query query = em.createQuery("update Order as o set o.amount=o.amount+10"); //update 的记录数 int result = query.executeUpdate();
+Query query = em.createQuery("update Order as o set o.amount=o.amount+10"); 
+//update 的记录数 
+int result = query.executeUpdate();
 
-Query query = em.createQuery("delete from OrderItem item where item.order in(from Order as o where o.amount<100)"); query.executeUpdate();
+Query query = em.createQuery("delete from OrderItem item where item.order in(from Order as o where o.amount<100)"); 
+query.executeUpdate();
 
-query = em.createQuery("delete from Order as o where o.amount<100"); query.executeUpdate();//delete的记录数
+query = em.createQuery("delete from Order as o where o.amount<100"); 
+query.executeUpdate();//delete的记录数
 ```
 
-### 4.6 事务 
+
+### 4.6 自定义查询 
+
+(1 )JPQL 
+
+使用 @Query注解 **面向对象** 查询。
+
+ - 索引传参模式:  ?数字, 传参位置对齐
+ - 具名参数模式，使用@Param注解绑定参数名
+
+JPQL 增删改操作需要事务支持@Transactional (一般在业务层) ，并且需要添加 @Modifying 注解通知springdatajpa是增删改的操作。
+
+JPQL 不支持插入，如果是插入操作，一定是在hibernate的下菜支持，可借助 insert into select 方式进行。
+
+```java
+public interface CustomerRepository extends PagingAndSortingRepository<Customer,Long>{
+     
+    // 索引传参模式:  ?数字, 传参位置对齐
+    @Query("FROM Customer where custName=?1 ")
+    List<Customer>findCustomerByCustName(String custName);
+
+    // 具名参数模式，使用@Param注解绑定参数名
+    @Query("FROM Customer where custName=:custName ")
+    List<Customer>findCustomerByCustName(@Param("custName") String custName);
+    //修改
+    @Transactional
+    @Modifying
+    @Query("UPDATE Customer c set c.custName=:custName where c.custId=:id")
+    int updateCustomer(@Param("custName")String custName, @Param("id")Long id);
+    
+    @Transactional
+    @Modifying 
+    @Query("DELETE FROM Customer where c.custId=:id")
+    int deleteCustomer(Long id);
+
+    //新增
+    @Transactional
+    @Modifying
+    @Query("INSERT INTO Customer (custName ) SELECT c.custName FROM Customer C where c.custId = ?1 ")
+    int insertCustomerBySelect(Long id);
+
+    // 原始SQL 查询
+    @Query(value="select * from tb_customer where cust_name=:custName",nativeQuery = true)
+    List<Customer> findCustomerByCustNameBySql(@Param("custName") String custName);
+
+}
+```
+
+> jpa buddy 的idea插件可以提示JPQL对象属性
+
+(2) 约定方法名
+
+支持查询方法的主题关键字（方法前缀）
+ - 决定当前方法的作用
+ - 只支持查询和删除
+ 
+支持查询方法的谓词关键字和修饰符
+ - 决定查询条件的
+
+具体可参考官网对应版本支持[jpa/reference/jpa/query-methods](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
+
+(3) Query By Example 举例查询
+
+查询限制
+
+ - 不支持嵌套或分组的属性约束，如 a=?1 or ( b =?2 and c =?3 )
+ - 只支持字符串 start、contains、ends、regex 匹配和其他属性类型的精确匹配。
+
+关键接口 QueryByExampleExecutor
+
+```java
+public interface QueryByExampleExecutor<T> {
+
+  <S extends T> S findOne(Example<S> example);
+
+  <S extends T> Iterable<S> findAll(Example<S> example);
+
+  // … more functionality omitted.
+}
+```
+
+Example 简单匹配模式：
+
+```
+Person person = new Person();                         
+person.setFirstname("Dave");                          
+
+Example<Person> example = Example.of(person);   
+```
+
+ExampleMatcher 复杂匹配模式：
+
+```
+//创建域对象的新实例。
+Person person = new Person();                          
+person.setFirstname("Dave");                           
+//创建一个ExampleMatcher以期望所有值都匹配。
+ExampleMatcher matcher = ExampleMatcher.matching()     
+    //构造一个新的ExampleMatcher以忽略lastname属性路径
+    .withIgnorePaths("lastname")          
+     //构造一个新的ExampleMatcher以忽略lastname属性路径并包含 null 值               
+    .withIncludeNullValues()                        
+    //构造一个新的ExampleMatcher以忽略lastname属性路径、包含空值并执行后缀字符串匹配。     
+    .withStringMatcher(StringMatcher.ENDING);            
+
+Example<Person> example = Example.of(person, matcher); 
+```
+ExampleMatcher希望探针上设置的所有值都匹配。如果您想获得与隐式定义的任何谓词匹配的结果，请使用ExampleMatcher.matchingAny() 。
+
+更多参考官方示例[reference/repositories/query-by-example](https://docs.spring.io/spring-data/jpa/reference/repositories/query-by-example.html)
+
+
+(4) Specifications 规格查询
+
+> JPA 2 引入了一个标准 API，您可以使用它以编程方式构建查询。通过编写criteria ，您可以定义域类查询的 where 子句。退后一步，这些标准可以被视为对 JPA 标准 API 约束所描述的实体的谓词。
+
+>  规约模式（Specification Pattern）是一种特殊的设计模式，最早由Eric Evans在他的《领域驱动设计》一书中提出。规约模式的主要思想是将业务规则从业务对象中分离出来，这样就可以将这些规则独立地重用和组合。一个规约（Specification）是一个独立的业务规则，它通常会实现一个方法（在Java中通常是isSatisfiedBy），该方法接收一个业务对象，然后检查这个对象是否满足规约的条件。
+
+
+规范接口 JpaSpecificationExecutor
+
+定义规格规则， 也可以在查询的时候临时创建匿名类
+
+```java
+public class CustomerSpecs {
+
+
+  public static Specification<Customer> isLongTermCustomer() {
+    return (root, query, builder) -> {
+       // root 是 from Customer 为了可以获取实体列
+       // query 组装 order by  where  
+       // builder 组合where 条件
+      LocalDate date = LocalDate.now().minusYears(2);
+      return builder.lessThan(root.get(Customer_.createdAt), date);
+    };
+  }
+
+  public static Specification<Customer> hasSalesOfMoreThan(MonetaryAmount value) {
+    return (root, query, builder) -> {
+      // build query here
+    };
+  }
+}
+```
+
+
+```java
+public class CustomerSpecs {
+    
+    @Test
+    public void SpecificationTest(){
+        List<Customer> customers = customerRepository.findAll(isLongTermCustomer());
+        
+        
+        List<Customer> customers = customerRepository.findAll((root, query, builder) -> {
+              LocalDate date = LocalDate.now().minusYears(2);
+              return builder.lessThan(root.get(Customer_.createdAt), date);
+        });
+        
+        //第二个参数：排序的属性名称
+        Sort sort =   Sort.by(Sort.Direction.DESC,"custId");
+        
+        List<Customer> customers = customerRepository.findAll(new Specification<Customer>() {
+                    @Override
+                    public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        
+                        Path<Long> custId = root.get("custId");
+                        Path<String> custName = root.get("custName");
+                        Path<String> custStatus = root.get("custStatus");
+                        Path<Date> opdate = root.get("opdate");
+        
+                        List<Predicate> list = new ArrayList<>();
+                        // 传1id 就使用ID查
+                        if (!ObjectUtils.isEmpty(customer.getCustId())){
+                            list.add(criteriaBuilder.equal(custId, customer.getCustId()));
+                        }
+                        if (!ObjectUtils.isEmpty(customer.getCustName())) {
+                            list.add(criteriaBuilder.like(custName.as(String.class), "%"+customer.getCustName()+"%"));
+                        }
+        
+                        if (!ObjectUtils.isEmpty(customer.getStatus())) {
+                            CriteriaBuilder.In<String> in = criteriaBuilder.in(custStatus);
+                            in.value("01").value("02");
+                            list.add(in);
+                        }
+                        if (!ObjectUtils.isEmpty(customer.getOpDate())) {
+                            list.add(criteriaBuilder.greaterThan(opdate.as(LocalDate.class),  LocalDate.now().minusYears(1)));
+                        }
+        
+                        Predicate and = criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
+        
+                        return and;
+                    }
+                }, sort);
+
+    }
+}
+```
+
+{.tips}
+> 看到这里，一定可以发现这特么什么东西，搞个SQL还这么复杂，说明可读性相对较差，尤其是初接触的时候，只能说复杂业务最好不要使用了这个匿名的Specification查询，一定是相对简单查询才使用，否则可以预见以后维护SQL非常痛苦。
+> 如果一定要用，尽量预期业务查询变动小，或者定义一个归约实现类，拆解出更细致粒度的归约条件，然后直接进行细粒度的归约组合。
+> 我记得 Mybatis 也有这种类似归约式的查询，不过它是使用的Example类命名，整体的设计条件组合和这个 Specification 风格挺相似。 
+
+
+(5) QueryDSL 查询
+
+[http://querydsl.com/](http://querydsl.com/)
+
+**不属于JPA规范或Hibernate框架，而是第三方独立组件。**
+
+Querydsl 定义了一种通用的静态类型语法，用于在持久域模型数据之上进行查询。 JDO 和 JPA 是 Querydsl 的主要集成技术。 本指南介绍了如何将 Querydsl 与 JPA 结合使用。
+
+Querydsl for JPA 是 JPQL 和 Criteria 查询的替代方案。 它以完全类型安全的方式将 Criteria 查询的动态特性与 JPQL 的表达能力以及所有这些结合起来。
+
+直接看文档[https://github.com/querydsl/querydsl/tree/master/querydsl-jpa](https://github.com/querydsl/querydsl/tree/master/querydsl-jpa)
+
+Querydsl JPA 模块支持 JPA 和 Hibernate API。
+
+```xml
+<dependency>
+  <groupId>com.querydsl</groupId>
+  <artifactId>querydsl-apt</artifactId>
+  <version>${querydsl.version}</version>
+  <scope>provided</scope>
+</dependency>
+
+<dependency>
+  <groupId>com.querydsl</groupId>
+  <artifactId>querydsl-jpa</artifactId>
+  <version>${querydsl.version}</version>
+</dependency>
+
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-log4j12</artifactId>
+  <version>1.6.1</version>
+</dependency>
+```
+
+maven APT 插件
+
+```xml
+<project>
+  <build>
+  <plugins>
+    <plugin>
+      <groupId>com.mysema.maven</groupId>
+      <artifactId>apt-maven-plugin</artifactId>
+      <version>1.1.3</version>
+      <executions>
+        <execution>
+          <goals>
+            <goal>process</goal>
+          </goals>
+          <configuration>
+            <outputDirectory>target/generated-sources/java</outputDirectory>
+            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+    ...
+  </plugins>
+  </build>
+</project>
+```
+
+
+
+{.tips}
+> JPAAnnotationProcessor 查找使用 javax.persistence.Entity 注释进行注释的域类型，并为它们生成查询类型。如果在域类型中使用 Hibernate 注释，则应该使用 APT 处理器 com.querydsl.apt.hibernate.HibernateAnnotationProcessor。
+> APT插件会为我们生成一个Query Type 的包装类（简称Q类）要使用Q类，需要将 target/generated-sources/java 设置为源码sources, 项目打包时需要打包到源码包中。
+
+
+核心接口 
+
+```java
+public interface QuerydslPredicateExecutor<T>{
+    
+}
+```
+
+自己的类
+
+```java
+public interface CustomerRepository extends PagingAndSortingRepository<Customer,Long>, QuerydslPredicateExecutor<Customer>{
+    
+}
+```
+
+{.tips}
+> PagingAndSortingRepository 或 CurdRepository 接口不能省。省了会使用 QuerydslPredicateExecutor 的作用失效。
+
+
+Querydsl 将在与 Customer 相同的包中生成一个名称为 QCustomer （Q类）的查询类型。 QCustomer 可以用作 Querydsl 查询中的静态类型变量，作为 Customer 类型的代表。
+
+QCustomer 有一个可以作为静态字段访问的默认实例变量：
+
+```
+JPASQLQuery queryFactory = new JPASQLQuery(em);
+QCustomer customer = QCustomer.customer;
+ 
+// rename customers named Bob to Bobby
+queryFactory.update(customer).where(customer.name.eq("Bob"))
+    .set(customer.name, "Bobby")
+    .execute();
+```
+
+> JPA使用JPASQLQuery，Hibernate使用HibernateSQLQuery。
+
+像这样使用 JPQLQuery 接口的级联方法
+
+  -  select: 设置查询的投影。 （如果通过查询工厂创建则不需要）
+
+  -  from: 在此处添加查询源。
+
+  -  innerJoin, join, leftJoin, rightJoin, on: 使用这些构造添加连接元素。 对于连接方法，第一个参数是连接源，第二个参数是目标（别名）。
+
+  -  where: 添加查询过滤器，以逗号分隔的可变参数形式或通过 and 运算符级联。
+
+  -  groupBy: 以可变参数形式添加 group by 参数。
+
+  -  having: 添加具有“group by”分组的过滤器作为谓词表达式的 varags 数组。
+
+  -  orderBy: 将结果的排序添加为顺序表达式的可变参数数组。 在数字、字符串和其他可比较的表达式上使用 asc() 和 desc() 来访问 OrderSpecifier 实例。
+
+  -  limit, offset, restrict: 设置结果的分页。 最大结果的限制，跳过行的偏移量和在一次调用中定义两者的限制。
+
+
+
+
+
+JPA 查询中使用原生SQL
+
+必须为 SQL 架构生成 Querydsl 查询类型。例如，可以使用以下 Maven 配置来完成此操作：
+
+```xml
+<project>
+  <build>
+    <plugins>
+       
+      <plugin>
+        <groupId>com.querydsl</groupId>
+        <artifactId>querydsl-maven-plugin</artifactId>
+        <version>${querydsl.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>export</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <jdbcDriver>org.apache.derby.jdbc.EmbeddedDriver</jdbcDriver>
+          <jdbcUrl>jdbc:derby:target/demoDB;create=true</jdbcUrl>
+          <packageName>com.mycompany.mydomain</packageName>
+          <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+       
+    </plugins>
+  </build>
+</project>
+```
+> 当查询类型成功生成到您选择的位置后，您可以在查询中使用它们。同Q类一样，需要将 target/generated-sources/java 设置为源码sources, 项目打包时需要打包到源码包中。
+
+
+```java
+public class JPADsl{
+
+ 
+    @PersistenceContext
+    EntityManager em;
+
+
+    public void testSQL(){
+        JPAQueryFactory factory = new JPAQueryFactory(em);
+        QCustomer customer = Qcustomer.customer;
+        
+        // 返回实体类
+        JPAQuery<Customer> customerJPAQuery = factory.select(customer)
+                        .from(customer).where(customer.custId.eq(1L))
+                        .orderBy(customer.custId.desc());
+
+        // 返回自定义类
+        //select id,custName from 
+        JPAQuery<Tuple> tupleJPAQuery = factory.select(customer.custId, customer.custName)
+            .from(customer).where(customer.custId.eq(1L))
+            .orderBy(customer.custId.desc());
+
+        List<Tuple>fetch =tupleJPAQuery.fetch();
+        
+        for (Tuple tuple:fetch) {
+            System.out.println(tuple.get(customer.custId));
+            System.out.println(tuple.get(customer.custName));
+        }
+        // sum 查询
+        JPAQuery<Long> longJPAQuery = factory.select(customer.custId.sum())
+                .from(customer)
+                .where(customer.custId.eq(1L))
+                .orderBy(customer.custId.desc());
+        Long sum = longJPAQuery.fetch().get(0);
+    }
+}
+```
+
+更多复杂查询SQL实例参考[官方文档querydsl-jpa_integration](http://querydsl.com/static/querydsl/latest/reference/html/ch02.html#jpa_integration)
+
+
+### 4.7 事务 
 
 JPA支持本地事务管理（RESOURCELOCAL）和容器事务管理（JTA），容器事务管理只能用在EJB/Web容器环境中。
 
@@ -439,6 +867,7 @@ SpringDataJPA让我们解脱了DAO层的操作，基本上所有CRUD都可以依
 主要依赖
 
 ```xml
+<dependences>
         <!--        jpa  -->
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -456,6 +885,7 @@ SpringDataJPA让我们解脱了DAO层的操作，基本上所有CRUD都可以依
             <artifactId>druid</artifactId>
             <version>1.2.8</version>
         </dependency>
+<dependences/>
 ```
 
 ### 2.相关API
@@ -639,10 +1069,7 @@ jpa.generate-ddl=false
 jpa.hibernate.ddl-auto=false
 
 jpa.generate-ddl=false
-
-
 ```
-
 
 Hibernate5中不再支持hibernate.ejb.naming_strategy属性配置，可以使用如下两个属性配置替换
 
