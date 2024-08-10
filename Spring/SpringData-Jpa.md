@@ -615,11 +615,13 @@ public class CustomerSpecs {
 
 {.tips}
 > 看到这里，一定可以发现这特么什么东西，搞个SQL还这么复杂，说明可读性相对较差，尤其是初接触的时候，只能说复杂业务最好不要使用了这个匿名的Specification查询，一定是相对简单查询才使用，否则可以预见以后维护SQL非常痛苦。
+> 
 > 如果一定要用，尽量预期业务查询变动小，或者定义一个归约实现类，拆解出更细致粒度的归约条件，然后直接进行细粒度的归约组合。
+> 
 > 我记得 Mybatis 也有这种类似归约式的查询，不过它是使用的Example类命名，整体的设计条件组合和这个 Specification 风格挺相似。 
 
 
-(5) QueryDSL 查询
+(5) QueryDSL 扩展查询
 
 [http://querydsl.com/](http://querydsl.com/)
 
@@ -686,6 +688,7 @@ maven APT 插件
 
 {.tips}
 > JPAAnnotationProcessor 查找使用 javax.persistence.Entity 注释进行注释的域类型，并为它们生成查询类型。如果在域类型中使用 Hibernate 注释，则应该使用 APT 处理器 com.querydsl.apt.hibernate.HibernateAnnotationProcessor。
+> 
 > APT插件会为我们生成一个Query Type 的包装类（简称Q类）要使用Q类，需要将 target/generated-sources/java 设置为源码sources, 项目打包时需要打包到源码包中。
 
 
