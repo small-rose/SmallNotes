@@ -9,10 +9,11 @@ Here are SpringBoot upgrade experience .
 {: .fs-6 .fw-300 }
 
 
-## Table of contents
+## Here are SpringBoot upgrade experience .
 {: .no_toc .text-delta }
 
-
+1. TOC
+{:toc}
 
 ## SpringBoot 升级关注事项
 
