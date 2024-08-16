@@ -5,10 +5,24 @@ parent: Java
 nav_order: 92
 ---
 
+Here are java 8 Functional Interface experience .
+{: .fs-6 .fw-300 }
 
-## FunctionalInterface
 
-什么是FunctionalInterface
+## Here are function interface demo .
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+
+## Functional Interface
+
+## 什么是函数式接口
+
+
+什么是Functional Interface
+
 
 ```java
 @Documented
@@ -30,23 +44,13 @@ interface做注解的注解类型，被定义成java语言规则
 - 编译器会自动把满足function interface要求的接口自动识别为function interface。
  
 
-自定义函数式接口
 
-```java
-@FunctionalInterface
-public interface IMyInterface {
-    void study();
-}
 
-public class TestIMyInterface {
-    public static void main(String[] args) {
-        IMyInterface iMyInterface = () -> System.out.println("I like study");
-        iMyInterface.study();
-    }
-}
-``` 
+## 内置函数式接口
 
-内置的四大函数接口及使用
+内置的函数接口都是 `rt.jar` 中的 `java.util.function` 包下。
+
+常见的有4大类：
 
 消费型接口: Consumer< T> void accept(T t)有参数，无返回值的抽象方法；
 
@@ -89,4 +93,22 @@ Function<String, String> backToString = toInteger.andThen(String::valueOf);
 backToString.apply("123");     // "123"
 ```
 
+其他接口主要差别是参数类型、参数个数、有无返回值或返回值类型差异。
 
+## 自定义函数式接口
+
+自定义（无参无返回）函数式接口
+
+```java
+@FunctionalInterface
+public interface IMyInterface {
+    void study();
+}
+
+public class TestIMyInterface {
+    public static void main(String[] args) {
+        IMyInterface iMyInterface = () -> System.out.println("I like study");
+        iMyInterface.study();
+    }
+}
+``` 

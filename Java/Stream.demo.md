@@ -2,7 +2,7 @@
 layout: default
 title: Java Stream 
 parent: Java
-nav_order: 90
+nav_order: 91
 ---
 
 Here are java 8 stream experience .
@@ -179,7 +179,7 @@ Stream流的api方法
 >不会影响原数据（我们在流中可以多数据做很多处理。但是正常情况下是不会影响原来集合中的元素的。这往往也是我们期望的）
 
 
-## DEMO
+## Stream中常用方法 Demo 案例 
 
 准备数据
  

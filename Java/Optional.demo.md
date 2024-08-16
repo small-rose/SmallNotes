@@ -2,7 +2,7 @@
 layout: default
 title: Java Optional
 parent: Java
-nav_order: 91
+nav_order: 90
 ---
 
 
@@ -19,7 +19,7 @@ Here are java 8 stream experience .
 
 ## Optional 中常用方法
 
-Stream流的api方法
+Optional的api方法
  
 1、构建API：构建一个Optional对象；方法有：empty( )、of( )、ofNullable( )；
 
@@ -30,7 +30,7 @@ Stream流的api方法
 4、断言API：对Optional对象里包装的值做一些逻辑判断；方法有：filter( )、isPresent( )、ifPresent( )；
 
 
-## DEMO
+## API使用 Demo 案例
 
 准备数据
  
@@ -51,7 +51,7 @@ public class UserInfo {
 }
 ```
 
-### 1、构建API
+### 构建API
 
 ```java
 
@@ -79,7 +79,7 @@ public class OptDemo {
 }
 ```
 
-### 2、取值API
+### 取值API
 
 ```java
 public class OptDemo {
@@ -112,7 +112,7 @@ public class OptDemo {
 }
 ```
 
-### 3、转换API
+### 转换API
 
 ```java
 public class OptDemo {
@@ -142,7 +142,7 @@ public class OptDemo {
 }
 ```
 
-### 4、判断API
+### 判断API
 
 ```java
 public class OptDemo {
@@ -174,4 +174,6 @@ public class OptDemo {
 }
 ```
  
-### 5、其他
+### 其他
+
+
