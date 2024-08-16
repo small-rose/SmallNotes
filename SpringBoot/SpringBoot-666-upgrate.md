@@ -99,6 +99,8 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
 
 如工具类组件: snakeyaml、xstream、json、fastjson、kaptcha、hutool、commons-系列
 
+
+{: .tips}
 > xstream 1.4.17 -> 1.4.20 版本
 >
 > com.thoughtworks.xstream.security.ForbiddenClassException
