@@ -118,6 +118,8 @@ GitHub加速下载
 <a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">hexo-butterfly</a>
 <a href="https://github.com/amehime/hexo-theme-shoka" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">hexo-shoka</a>
 <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">hexo-icarus</a>
+<a href="https://github.com/didi/LogiCommon" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">LogiCommon</a>
+<a href="https://github.com/wkeyuan/DWSurvey" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">问卷系统</a>
 
 </div> 
     
