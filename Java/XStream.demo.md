@@ -662,7 +662,7 @@ XML转换结果
 </message>
 ```
 
-反向解析XML结果
+反向解析XML（反序列号）结果
 
 ```
 XmlObject(head=MsgHeader(tradeTime=2024-08-16 15:02:30:145, tradeType=01, contentLength=3203, contentType=A1, requestId=null), body=MsgBody(object=UserInfo(name=Jack, birth=1997-09-09, loginTime=2024-08-16 15:02:30:154)))
