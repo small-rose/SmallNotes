@@ -1,8 +1,8 @@
 ---
 layout: default
-title: FunctionalInterface
+title: Func Interface
 parent: Java
-nav_order: 91
+nav_order: 92
 ---
 
 

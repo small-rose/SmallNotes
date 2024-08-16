@@ -1,9 +1,20 @@
 ---
 layout: default
-title: Java Optional API
+title: Java Optional
 parent: Java
 nav_order: 91
 ---
+
+
+Here are java 8 stream experience .
+{: .fs-6 .fw-300 }
+
+
+## Here are stream demo .
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
 
 
 ## Optional 中常用方法

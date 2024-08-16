@@ -1,9 +1,19 @@
 ---
 layout: default
-title: Java Stream API
+title: Java Stream 
 parent: Java
 nav_order: 90
 ---
+
+Here are java 8 stream experience .
+{: .fs-6 .fw-300 }
+
+
+## Here are stream demo .
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
 
 ## Stream 流的生命周期
 
