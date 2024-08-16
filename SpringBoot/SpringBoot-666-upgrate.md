@@ -9,10 +9,11 @@ Here are SpringBoot upgrade experience .
 {: .fs-6 .fw-300 }
 
 
-## Table of contents
+## Here are SpringBoot upgrade experience .
 {: .no_toc .text-delta }
 
-
+1. TOC
+{:toc}
 
 ## SpringBoot 升级关注事项
 
@@ -141,3 +142,133 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
 ## 三、全量功能测试
 
 API等代码变动，需要全面功能覆盖测试，保证功能正常。   
+
+
+## 四、附加
+
+本例 hibernate 5.0.1.Final  升级 5.4.3
+
+Hibernate主要是通过三个组件来实现：
+
+  -  hibernate-core：Hibernate的核心实现，提供了Hibernate所有的核心功能。 
+  -  hibernate-entitymanager：Hibernate实现了标准的JPA，可以把它看成hibernate-core和JPA之间的适配器，它并不直接提供ORM的功能，而是对hibernate-core进行封装，使得Hibernate符合JPA的规范。
+  -  hibernate-annotation：Hibernate支持annotation方式配置的基础，它包括了标准的JPA annotation以及Hibernate自身特殊功能的annotation。
+
+
+Hibernate 5.0 开始对 JPA 2.1 特定功能的支持（存储过程支持）。
+
+Hibernate 5.2 是使用 Java 8 JDK 构建的
+
+Hibernate 5.2  需要 Java 1.8 and JDBC 4.2.
+
+Hibernate 5.2  hibernate-java8 模块已合并到 hibernate-core 中，并且现在原生支持 Java 8 日期/时间类型。hibernate-entitymanager 合并到 hibernate-core
+
+org.hibernate.SessionFactory 现在扩展了javax.persistence.EntityManagerFactory - 暂时它在技术上扩展了org.hibernate.jpa.HibernateEntityManagerFactory （反过来又扩展了javax.persistence.EntityManagerFactory ）以实现向后兼容性。 HibernateEntityManagerFactory 已弃用。
+
+org.hibernate.Session 现在扩展了javax.persistence.EntityManager - 暂时它在技术上扩展了org.hibernate.jpa.HibernateEntityManager （它又扩展了javax.persistence.EntityManager ）以实现向后兼容性。 HibernateEntityManager已弃用。
+
+
+EntityManagerFactory是应用程序域模型到数据库的映射的线程安全（且不可变）表示，充当org.hibernate.Session实例的工厂。 
+
+EntityManagerFactory是SessionFactory的 JPA 等效项，基本上，这两者汇聚到同一个SessionFactory实现中。
+
+
+org.hibernate.Query （已弃用，取而代之的是新的org.hibernate.query.Query ）现在扩展了 JPA 契约javax.persistence.Query和javax.persistence.TypedQuery 。还有ProcedureCall和StoredProcedureQuery 。
+
+
+org.hibernate.HibernateException现在扩展了javax.persistence.PersistenceExceptions 。现在，“覆盖”JPA 对应方法的 Hibernate 方法也会根据 JPA 契约的要求抛出各种 JDK 定义的 RuntimeException（例如IllegalArgumentException 、 IllegalStateException等）。
+
+持久/类型访问现在通过org.hibernate.Metamodel公开，它扩展了javax.persistence.metamodel.Metamodel 。 MetamodelImpl 现在管理类型系统的所有方面（见下文）。
+缓存管理也得到了整合。 org.hibernate.Cache现在扩展了javax.persistence.Cache 。 CacheImpl 现在管理缓存区域的所有方面（见下文）。
+
+
+SessionFactoryImplementor 曾经有许多与管理和访问实体和集合持久化相关的方法。由于无论如何我们都需要处理 JPA Metamodel 合约，所以我继续将所有代码移至新的org.hibernate.metamodel.spi.MetamodelImplementor中
+
+SessionFactory 和 SessionFactoryImplementor 各自都有许多处理缓存区域的方法。自 5.0 以来，其中许多方法已被弃用，这些方法将被删除。然而，该功能已移至org.hibernate.Cache和org.hibernate.engine.spi.CacheImplementor合约中，帮助实现 JPA 的javax.persistence.Cache角色。
+
+
+Hibernate 5.3 添加了对 JPA 2.2 规范的支持
+
+
+关键配置
+
+```java
+@Configuration
+@EnableJpaRepositories
+@EnableTransactionManagement
+class ApplicationConfig {
+
+  @Bean
+  public DataSource dataSource() {
+
+    EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+    return builder.setType(EmbeddedDatabaseType.HSQL).build();
+  }
+
+  @Bean
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+
+    HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+    vendorAdapter.setGenerateDdl(true);
+    vendorAdapter.setShowSql(true);
+    LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+    factory.setJpaVendorAdapter(vendorAdapter);
+    factory.setPackagesToScan("com.acme.domain");
+    factory.setDataSource(dataSource());
+    return factory;
+  }
+
+  @Bean
+  public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+
+    JpaTransactionManager txManager = new JpaTransactionManager();
+    txManager.setEntityManagerFactory(entityManagerFactory);
+    return txManager;
+  }
+}
+```
+
+> 创建LocalContainerEntityManagerFactoryBean而不是EntityManagerFactory ，因为前者除了创建EntityManagerFactory之外还参与异常转换机制。
+
+
+Springboot 是约定大于配置的思想，因此在默认情况下，只要你的 datasource 不是 **spring.datasource.** 的配置到内置的 DataSourceProperties 对象里面，那么就有可能不符合默认机制。
+
+SpringBoot 内置了最常见的三种数据源的自动化配置：
+  -  HikariDataSource  （2.0 之后就推荐使用 Hikari）
+  -  tomcat的JDBC
+  -  apache的dbcp
+    
+默认情况下 Datasource 的 EntityManagerFactory 和 TransactionManager 加载机制：
+
+主要自动化配置类：HibernateJpaConfiguration、JpaBaseConfiguration
+
+SpringBoot自动化装配机制（模块化装配、条件装配）完成自动化配置：
+
+**数据源部分**:
+
+DatasourceAutoConfiguration 配置类默认去加载 spring.datasource 开头的相关数据源参数，创建DataSource组件。 如果使用默认的就需要自己编写JavaConfig 类是创建DataSource。
+
+**Jpa组件部分**：
+ 
+总体上是通过 JpaBaseConfiguration 配置类去创建spring data jpa 需要的基本组件 EntityManagerFactory、TransactionManager 组件。
+
+通过 JpaRepositoryConfiguration 配置类中 @Import(JpaRepositoryImportSelector.class) 导入JpaRepositoryImportSelector。
+
+JpaRepositoryImportSelector 又会注册一个ImportBeanDefinitionRegistrar，其实就 JpaRepositoryRegistrar.
+
+JpaRepositoryRegistrar 使用的 @EnableJpaRepository 的方式导入激活JPA组件。
+
+JpaRepositoryConfiguration 的作用包含了 @EnableJpaRepository 。
+
+
+> 在多数据源或一些老系统升级时使用传统的配置方式情况下，可能会导致JPA组件的自动装配失效，可能会出现找不到 entityManager 或者 提示发现多个 entityManager 的类型的情况，就需要人工进行灵活配置。 
+
+多数据源部分可参数网友提供的方案[https://blog.51cto.com/u_16099276/9882122](https://blog.51cto.com/u_16099276/9882122)
+
+整体配置类似，不同数据源可以扫描不同的包，类似分包机制进行事务、session隔离，也可以将数据源换成动态数据源，只是在使用动态数据时，务必要在开启事务之前切换数据源，进入事务后是无法进行数据源切换的。
+
+
+**官网spring-data-examples**
+
+SpringData Jpa [官方spring-data-examples](https://github.com/spring-projects/spring-data-examples/tree/main/jpa)
+
