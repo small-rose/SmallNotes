@@ -98,6 +98,12 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
 
 如工具类组件: snakeyaml、xstream、json、fastjson、kaptcha、hutool、commons-系列
 
+> xstream 1.4.17 -> 1.4.20 版本
+>
+> com.thoughtworks.xstream.security.ForbiddenClassException
+>
+> 从1.14.12版本开始，XStream包含一个安全框架，用于在反序列化时为允许的类型实现黑名单或白名单。在1.4.17版本之前，XStream保留了一个默认的黑名单，以拒绝用于各种安全攻击的所有类型的Java运行时，以确保现有用户的最佳运行时兼容性。然而，这种方法失败了。过去几个月的情况表明，仅Java运行时就包含数十种可用于攻击的类型，甚至不考虑类路径上的第三方库。
+> 因此，XStream的新版本 1.4.18 现在默认使用白名单，任何遵循建议并为自己的场景初始化安全框架的人都可以轻松更新到新版本，没有任何问题。其他人现在必须进行适当的初始化，否则新版本在反序列化时肯定会失败。
 
 ## 二、配置或API适配
 
