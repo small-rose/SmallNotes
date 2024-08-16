@@ -205,12 +205,12 @@ Person{name='张三', age=22, lockStatus='1'}
 
 {: .tips}
 > com.thoughtworks.xstream.security.ForbiddenClassException
+> 
+> Starting with version 1.14.12 nine years ago, XStream contains a Security Framework to implement a black- or whitelist for the allowed types at deserialization time. Until version 1.4.17, XStream kept a default blacklist in order to deny all types of the Java runtime, which are used for all kinds of security attacks, in order to guarantee optimal runtime compatibility for existing users. However, this approach has failed. The last months have shown, that the Java runtime alone contains dozens of types that can be used for an attack, not even looking at the 3rd party libraries on a classpath. The new version of XStream uses therefore now by default a whitelist, which is recommended since nine years. It also has been complaining on the console for a long time about an uninitialized security framework the first time it was run. Anyone who has followed the advice and initialized the security framework for their own scenario can easily update to the new version without any problem. Everyone else will have to do a proper initialization now, otherwise the new version will fail with certainty at deserialization time.
 >
-> 从1.14.12版本开始，XStream包含一个安全框架，用于在反序列化时为允许的类型实现黑名单或白名单。在1.4.17版本之前，XStream保留了一个默认的黑名单，以拒绝用于各种安全攻击的所有类型的Java运行时，以确保现有用户的最佳运行时兼容性。然而，这种方法失败了。过去几个月的情况表明，仅Java运行时就包含数十种可用于攻击的类型，甚至不考虑类路径上的第三方库。
-> 因此，XStream的新版本 1.4.18 现在默认使用白名单，任何遵循建议并为自己的场景初始化安全框架的人都可以轻松更新到新版本，没有任何问题。其他人现在必须进行适当的初始化，否则新版本在反序列化时肯定会失败。
+> 人话翻译: xstream 为防止反序列化攻击, 从 1.14.12 版本开始做了个黑名单和白名单的功能，到1.4.17版为止，都只默认使用了黑名单，白名单只是推荐。但是从1.4.18开始，XStream 做 xml/json 反序列化前，都会强制使用者提供白名单类型。
 >
-> 人话翻译: 为防止反序列化攻击, 1.14.12 版本开始做了个黑名单和白名单的功能，到1.4.17版，都只默认使用了黑名单，白名单只是推荐。但是从1.4.18开始，XStream 做XML/JSON反序列化前，强制使用者提供白名单类型。
-
+> 就是得调用 xstream.allowTypeXxx() 的方法，给自己反序列的类增加白名单。
 
 
 ### 方法案例
@@ -266,7 +266,7 @@ xstream.aliasField("user_name", Person.class, "name");
 Person{name='张三', age=22, lockStatus='1'}
 ```
 
-可以看到下划线变成了2个, 调整一下创建转换器的装饰。
+可以看到下划线变成了2个, 调整一下创建解析器参数 NoNameCoder, 至于使用何种解析器, 都可以。
 
 ```java
 public class Test{
