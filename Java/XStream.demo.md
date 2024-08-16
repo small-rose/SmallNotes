@@ -58,7 +58,7 @@ Xstream也可以将JavaBean序列化成Json或反序列化，使用非常方便�
 </dependency>
 ```
 
-{.tips}
+{: .tips}
 > 低版本时：Xstream序列化XML时需要引用的jar包: xstream-[version].jar、xpp3-[version].jar、xmlpull-[version].jar。
 > 
 > Xstream序列化Json需要引用的jar包: jettison-[version].jar。
@@ -203,7 +203,7 @@ Person{name='张三', age=22, lockStatus='1'}
 Person{name='张三', age=22, lockStatus='1'}
 ```
 
-{.tips}
+{: .tips}
 > com.thoughtworks.xstream.security.ForbiddenClassException
 >
 > 从1.14.12版本开始，XStream包含一个安全框架，用于在反序列化时为允许的类型实现黑名单或白名单。在1.4.17版本之前，XStream保留了一个默认的黑名单，以拒绝用于各种安全攻击的所有类型的Java运行时，以确保现有用户的最佳运行时兼容性。然而，这种方法失败了。过去几个月的情况表明，仅Java运行时就包含数十种可用于攻击的类型，甚至不考虑类路径上的第三方库。
