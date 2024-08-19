@@ -543,6 +543,8 @@ public class XstreamDemoTest{
   <int>12345</int>
 </object-stream>
 ```
+
+{: .tips}
 >注意： XStream对象流是通过标准 java.io.ObjectOutputStream 和 java.io.ObjectInputStream 对象。 因为XML文档只能有一个根节点,必须包装在一个序列化的所有元素额外的根节点。 这个根节点默认 <object-stream>上面的例子所示。
 
 
