@@ -103,7 +103,7 @@ XStreamxstream = new XStream(new DomDriver());
 此xstream实例，为线程安全的，可以供多个线程进行调用，共享使用。参考 com.thoughtworks.xstream.io.xml包，会发现系统提供了多种标识解析器供我们选择，包括，DomDriver、 JDomDriver、StaxDriver等等
 
 
-### 常用方法
+### Java编程式 - 常用方法
 
 
  - xStream.toXML(object)：将对象转换成XML、Json。
@@ -208,7 +208,7 @@ Person{name='张三', age=22, lockStatus='1'}
 > 
 > Starting with version 1.14.12 nine years ago, XStream contains a Security Framework to implement a black- or whitelist for the allowed types at deserialization time. Until version 1.4.17, XStream kept a default blacklist in order to deny all types of the Java runtime, which are used for all kinds of security attacks, in order to guarantee optimal runtime compatibility for existing users. However, this approach has failed. The last months have shown, that the Java runtime alone contains dozens of types that can be used for an attack, not even looking at the 3rd party libraries on a classpath. The new version of XStream uses therefore now by default a whitelist, which is recommended since nine years. It also has been complaining on the console for a long time about an uninitialized security framework the first time it was run. Anyone who has followed the advice and initialized the security framework for their own scenario can easily update to the new version without any problem. Everyone else will have to do a proper initialization now, otherwise the new version will fail with certainty at deserialization time.
 >
-> 人话翻译: xstream 为防止反序列化攻击, 从 1.14.12 版本开始做了个黑名单和白名单的功能，到1.4.17版为止，都只默认使用了黑名单，白名单只是推荐。但是从1.4.18开始，XStream 做 xml/json 反序列化前，都会强制使用者提供白名单类型。
+> 人话: xstream 为防止反序列化攻击, 从 1.14.12 版本开始做了个黑名单和白名单的功能，到1.4.17版为止，都只默认使用了黑名单，白名单只是推荐。但是从1.4.18开始，XStream 做 xml/json 反序列化前，都会强制使用者提供白名单类型。
 >
 > 就是得调用 xstream.allowTypeXxx() 的方法，给自己反序列的类增加白名单。
 
@@ -388,9 +388,252 @@ Person{name='张三', age=22, lockStatus='1'}
 
 可以看出不同的序列号样子稍微有的不同，`JsonHierarchicalStreamDriver` 会原样格式化，有空格换行。
 
-## 最佳实践
+
+### Java注解式 - 常用注解
+
+@XStreamAlias("message") 别名注解。 作用目标: 类, 字段。 可以给类或属性取别名。
+
+@XStreamImplicit 隐藏集合, 就是把集合或数组节点标签移除。作用目标: 集合字段。
+
+@XStreamImplicit(itemFieldName="part") 隐藏集合, 就是把集合或数组节点标签名字替换。作用目标: 集合字段.
+
+@XStreamConverter(SingleValueCalendarConverter.class) 注入转换器。作用目标: 对象。
+
+> xstream.registerConverter(new UserInfoConverter());
+
+@XStreamAsAttribute 转换成属性。作用目标: 字段
+
+@XStreamOmitField 忽略字段,生成的XML不会有对应的节点。作用目标: 字段。
+
+使用注解时需要开启:
+
+```
+xstream.autodetectAnnotations(true);
+```
+
+### Xstream自定义的转换器
+
+详细信息网址：[http://xstream.codehaus.org/converters.html](http://xstream.codehaus.org/converters.html)
+
+> 这部分属于进阶内容,可以在完成示例再来补充。
+
+常用的转换器接口与抽象类
+
+ -  SingleValueConverter：单值转换接口
+ -  AbstractSingleValueConverter：单值转换抽象类
+ -  Converter：常规转换器接口
+
+```java
+package com.xiaocai.demo.java.xstream.converter;
+
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.xiaocai.demo.java.xstream.bean.UserInfo;
+
+/**
+ * @Project : small-demo-java
+ * @Author : zhangxiaocai
+ * @Description : [ UserInfoConverter ] 说明：无
+ * @Function :  功能说明：无
+ * @Date ：2024/8/19 19:39
+ * @Version ： 1.0
+ **/
+public class UserInfoConverter implements Converter {
+
+    @Override
+    public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext marshallingContext) {
+        UserInfo userInfo = (UserInfo) o;
+        writer.startNode("姓名");
+        writer.setValue(userInfo.getName());
+        writer.endNode();
+        writer.startNode("生日");
+        writer.setValue(userInfo.getBirth()+"");
+        writer.endNode();
+        writer.startNode("登录时间");
+        writer.setValue(userInfo.getLoginTime()+"");
+        writer.endNode();
+        writer.startNode("转换器");
+        writer.setValue("自定义的转换器");
+        writer.endNode();
+    }
+
+    @Override
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext unmarshallingContext) {
+        UserInfo userInfo = new UserInfo();
+        reader.moveDown();
+        userInfo.setName(reader.getValue());
+        reader.moveUp();
+        reader.moveDown();
+        userInfo.setBirth(reader.getValue());
+        reader.moveUp();
+        reader.moveDown();
+        userInfo.setLoginTime(reader.getValue());
+        reader.moveUp();
+        return userInfo;
+    }
+
+    @Override
+    public boolean canConvert(Class aClass) {
+        return aClass.equals(UserInfo.class);
+    }
+} 
+```
+转换结果就按自定义的转换
+```
+<message>
+  <head>
+    <trade_time>2024-08-19 20:01:40:824</trade_time>
+    <trade_type>01</trade_type>
+    <content_Length>3203</content_Length>
+    <content_Type>A1</content_Type>
+  </head>
+  <body>
+    <object class="userInfo">
+      <姓名>Jack</姓名>
+      <生日>1997-09-09</生日>
+      <登录时间>2024-08-19 20:01:40:836</登录时间>
+      <转换器>自定义的转换器</转换器>
+    </object>
+  </body>
+</message>
+XmlObject(head=MsgHeader(tradeTime=2024-08-19 20:01:40:824, tradeType=01, contentLength=3203, contentType=A1, requestId=null), body=MsgBody(object=UserInfo(name=Jack, birth=1997-09-09, loginTime=2024-08-19 20:01:40:836)))
+```
+
+> 可以看到在转换器中可以自定义的转换和解析节点。
+
+> JSON 转换类似，就是把解析器换成JSON支持的就可以，其他注解和方法基本都一样。
+
+
+## xstream 持久化
+
+### 对象输出流
+
+```java
+public class XstreamDemoTest{ 
+    @Test
+    public void demoObjStreamTest01() throws IOException {
+        XStream xstream = new XStream();
+        ObjectOutputStream out = xstream.createObjectOutputStream(System.out);
+        out.writeObject(new Person("张三",12,"1"));
+        out.writeObject(new Person("李四",19,"0"));
+        out.writeObject("Hello World");
+        out.writeInt(12345);
+        out.close();
+    }
+
+}
+```
+输出结果
+```
+<object-stream>
+  <com.xiaocai.demo.java.xstream.bean.Person>
+    <name>张三</name>
+    <age>12</age>
+    <lockStatus>1</lockStatus>
+  </com.xiaocai.demo.java.xstream.bean.Person>
+  <com.xiaocai.demo.java.xstream.bean.Person>
+    <name>李四</name>
+    <age>19</age>
+    <lockStatus>0</lockStatus>
+  </com.xiaocai.demo.java.xstream.bean.Person>
+  <string>Hello World</string>
+  <int>12345</int>
+</object-stream>
+```
+>注意： XStream对象流是通过标准 java.io.ObjectOutputStream 和 java.io.ObjectInputStream 对象。 因为XML文档只能有一个根节点,必须包装在一个序列化的所有元素额外的根节点。 这个根节点默认 <object-stream>上面的例子所示。
+
+
+### 对象输入流
+
+解析xml串
+
+```java
+public class XstreamDemoTest{ 
+    @Test
+    public void demoXStreamObjTest01() throws IOException, ClassNotFoundException {
+
+        String s="<object-stream>\n" +
+                "  <com.xiaocai.demo.java.xstream.bean.Person>\n" +
+                "    <name>张三</name>\n" +
+                "    <age>12</age>\n" +
+                "    <lockStatus>1</lockStatus>\n" +
+                "  </com.xiaocai.demo.java.xstream.bean.Person>\n" +
+                "  <com.xiaocai.demo.java.xstream.bean.Person>\n" +
+                "    <name>李四</name>\n" +
+                "    <age>19</age>\n" +
+                "    <lockStatus>0</lockStatus>\n" +
+                "  </com.xiaocai.demo.java.xstream.bean.Person>\n" +
+                "  <string>Hello World</string>\n" +
+                "  <int>12345</int>\n" +
+                "</object-stream>";
+        StringReader reader = new StringReader(s);
+        XStream xstream = new XStream();
+        xstream.allowTypes(new Class[]{Person.class});
+        ObjectInputStream in = xstream.createObjectInputStream(reader);
+        System.out.println((Person) in.readObject());
+        System.out.println((Person) in.readObject());
+        System.out.println((String) in.readObject());
+        System.out.println((int) in.readInt());
+    }
+}
+```
+解析结果
+
+```
+Person{name='张三', age=12, lockStatus='1'}
+Person{name='李四', age=19, lockStatus='0'}
+Hello World
+12345
+```
+
+> JSON 转换类似，就是把解析器换成JSON支持的就可以，其他注解和方法基本都一样。
+
+
+### 持久化
+
+```java
+public class XstreamDemoTest{ 
+    @Test
+    public void testPersistenceWrite(){
+        PersistenceStrategy strategy = new FilePersistenceStrategy(new File("D:\\tmp"));
+        List list = new XmlArrayList(strategy);
+        list.add(new Person("张三",20,"1"));//保存数据
+        list.add(new Person("李四",33,"2"));
+        list.add(new Person("王五",47,"0"));
+    }
+}
+```
+检查D:\tmp目录,有三个文件:int@0.xml、int@1.xml、int@2.xml；每个对象都被序列化到XML文件里。
+
+
+反序列化XML文件里的
+
+```java
+public class XstreamDemoTest{ 
+    @Test
+    public void testPersistenceRead() {
+        PersistenceStrategy strategy = new FilePersistenceStrategy(new File("D:\\tmp"));
+        List list = new XmlArrayList(strategy);
+        for (Iterator it = list.iterator(); it.hasNext(); ) {
+            System.out.println((Person) it.next());
+            it.remove();//删除对象序列化文件
+        }
+    }
+}
+```
+> com.thoughtworks.xstream.security.ForbiddenClassException: com.xiaocai.demo.java.xstream.bean.Person 这里会反序列化失败，这种方式还不知道怎么设置白名单安全类型。
+
+> JSON 转换类似，就是把解析器换成JSON支持的就可以，其他注解和方法基本都一样。
+
+
+## 完整示例（最佳实践）
 
 通常接口不止一个，报文有很多套，有可能会涉及部分重复，但是body部分根据不同业务进行不同变化，可以设计通用的。
+
+当然前提你是接口定义提供方，才说了算。
 
 定义报文主体
 
@@ -662,8 +905,10 @@ XML转换结果
 </message>
 ```
 
-反向解析XML（反序列号）结果
+反向解析XML（反序列化）结果
 
 ```
 XmlObject(head=MsgHeader(tradeTime=2024-08-16 15:02:30:145, tradeType=01, contentLength=3203, contentType=A1, requestId=null), body=MsgBody(object=UserInfo(name=Jack, birth=1997-09-09, loginTime=2024-08-16 15:02:30:154)))
 ```
+
+> JSON 转换类似，就是把解析器换成JSON支持的就可以，其他注解和方法基本都一样。
