@@ -278,9 +278,11 @@ SpringData Jpa [官方spring-data-examples](https://github.com/spring-projects/s
 
 
 
-## 五、升级主动要变动
+## 五、升级主要变动
 
-补 `spring-boot-starter-validation`
+
+
+**补充依赖 `spring-boot-starter-validation`**
 
 ```groovy
 compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -303,6 +305,7 @@ public @interface SequenceGenerator {
  int allocationSize() default 50;  
 }
 ```
+
 - name属性表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中。 
 - sequenceName属性表示生成策略用到的数据库序列名称。 
 - initialValue表示主键初识值，默认为0。 
@@ -318,17 +321,17 @@ public @interface SequenceGenerator {
 ```java
 public interface CrudRepository<T, ID extends Serializable> extends Repository<T, ID> {
 
-<S extends T> S save(S entity);
-<S extends T> Iterable<s> save(Iterable<s> entities);
-//@return the entity with the given id or {@literal null} if none found
-T findOne(ID id) ;
-boolean exists(ID id);
-Iterable<T> findAll();
-Iterable<T> findAll(Iterable<ID> ids);
-long count();void delete(ID id) ;
-void delete(T entity);
-void delete(Iterable<? extends T> entities);
-void deleteAll();
+    <S extends T> S save(S entity);
+    <S extends T> Iterable<s> save(Iterable<s> entities);
+    //@return the entity with the given id or {@literal null} if none found
+    T findOne(ID id) ;
+    boolean exists(ID id);
+    Iterable<T> findAll();
+    Iterable<T> findAll(Iterable<ID> ids);
+    long count();void delete(ID id) ;
+    void delete(T entity);
+    void delete(Iterable<? extends T> entities);
+    void deleteAll();
 }
 ```
 
@@ -336,19 +339,19 @@ void deleteAll();
 
 ```java
 public interface CrudRepository<T, ID> extends Repository<T,ID> {
-<S extends T> S save(S entity);
-<S extends T> Iterable<S> saveAll(Iterable<s> entities);
-//@return the entity with the given id or {@literal Optional#empty()l if none found.
-Optional<T> findById(ID id);
-boolean existsById(ID id);
-Iterable<T> findAll();
-Iterable<T> findAllById(Iterable<ID> ids);
-long count();
-void deleteById(ID id) ;
-void delete(T entity);
-void deleteAllById(Iterable<? extends ID> ids);
-void deleteAll(Iterable<? extends T> entities);
-void deleteAll();
+    <S extends T> S save(S entity);
+    <S extends T> Iterable<S> saveAll(Iterable<s> entities);
+    //@return the entity with the given id or {@literal Optional#empty()l if none found.
+    Optional<T> findById(ID id);
+    boolean existsById(ID id);
+    Iterable<T> findAll();
+    Iterable<T> findAllById(Iterable<ID> ids);
+    long count();
+    void deleteById(ID id) ;
+    void delete(T entity);
+    void deleteAllById(Iterable<? extends ID> ids);
+    void deleteAll(Iterable<? extends T> entities);
+    void deleteAll();
 }
 ```
 
@@ -359,47 +362,61 @@ T findone (ID id)  -参数不为空，找不到值可以返回null
 新API
 
 (1) `<S extends T> Optional<s> findone (Example<s> example);` --参数写法更换，返回optional-参数写法更换，返回optional来源 JpaSpecificationExecutor来源 QueryByExampleExecutor
+
 (2) `Optional<T> findone(@Nullable Specification<T> spec);`
+
 (3) `Optional<T> findById(ID id) ;`.--参数不为空，返回optional来源 CrudRepository
+
 (4) `T getById(ID id);`（本意替换getOne方法）参数不为空，找不到值EntityNotFoundException来源 JpaRepository
+
 
 旧：
 
 `Iterable<T> findAll() ;`
+
 `Iterable<T> findAll(Iterable<ID> ids) ;`
 
 新：
 
 `List<T> findAllById(Iterable<ID> ids);` 来源JpaRepository
+
 `<S extends T> List<s> findAll (Example<s> example) ;` 来源JpaRepository
+
 `<S extends T> List<s> findAll(Example<s> example, Sort sort) ;` 来源JpaRepository
 
 旧：
 
 `<S extends T> S save(S entity);` 来源 CrudRepository
+
 `<S extends T> Iterable<s> save(Iterable<s> entities) ;` 来源 CrudRepository
 
 新：
 分离save,saveAll来源 CrudRepository
 
 `<S extendsT> S save(S entity);`
+
 <`S extendsT> List<s> saveAll(Iterable<S> entities) ;`
 
 旧：
 
 `void delete(ID id);` 来源 CrudRepository
+
 `void delete(T entity);`
+
 `void delete(Iterable<? extends T> entities);`
 
 新：
 
 `void deleteById(ID id);` 来源CrudRepository
+
 `void deleteById(T entity);`·`
+
 `void deleteAllById(Iterable<? extends ID> ids);`·`
 
 分页：
 
 旧：
+
 ```
 Pageable pageable = new PageRequest(page.getPageNo()-1, page.getPageSize());
 Pageable pageable = PageRequest.of (pageNo-1,pageSize, Sort.by(orders)) ;
@@ -410,7 +427,7 @@ Pageable pageable = PageRequest.of(page.getPageNo()-1, page.getPageSize()) ;
 Pageable pageable = PageRequest.of(pageNo-1,pageSize, Sort.by(orders)) ;
 ```
 
-**Springboot**
+**SpringBoot 配置变化**
 
 - gradle 版本 > gradle 6.9 
 - Tomcat 9
@@ -479,7 +496,7 @@ compile('redis.clients:jedis:3.6.3')
 
 
 
-spring-session 组件变化
+**spring-session 组件变化**
 
 原适配 spring boot 1.5.13
 
