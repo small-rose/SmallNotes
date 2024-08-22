@@ -17,7 +17,16 @@ nav_order: 2
 ---
 
 
-> 来源: https://www.peisebiao.com/css/fontello.css
+> 来源: https://www.peisebiao.com/
+
+## 配色方案
+
+
+ - [配色表 - https://www.peisebiao.com/seka/](https://www.peisebiao.com/seka/)
+
+ - [配色卡 - https://www.peisebiao.com/peise/](https://www.peisebiao.com/peise/)
+
+
 
 ## 色彩搭配-中国色
 
@@ -1769,13 +1778,36 @@ nav_order: 2
       background: linear-gradient(to right, rgb(0, 65, 106), rgb(228, 229, 230)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
       " width="40px" height="80px">#0416a  #e4e5e6</td>
 </tr>
+
+<tr>
+<td style="background-image:linear-gradient(to right, rgb(0, 65, 106), rgb(121, 159, 12), rgb(255, 224, 0)); background: #0416a;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, rgb(0, 65, 106), rgb(121, 159, 12), rgb(255, 224, 0));  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, rgb(0, 65, 106), rgb(121, 159, 12), rgb(255, 224, 0)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      " width="40px" height="80px">
+      <span>#0416a </span>
+      <span>#799fc </span>
+      
+       </td>
+<td style="background-image:linear-gradient(to right, rgb(247, 248, 248), rgb(172, 187, 120)); background: #f7f8f8;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, rgb(247, 248, 248), rgb(172, 187, 120));  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, rgb(247, 248, 248), rgb(172, 187, 120)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      " width="40px" height="80px">#f7f8f8  #acbb78</td>
+<td style="background-image:linear-gradient(to right, rgb(255, 224, 0), rgb(121, 159, 12)); background: #ffe00;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, rgb(255, 224, 0), rgb(121, 159, 12));  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, rgb(255, 224, 0), rgb(121, 159, 12)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      " width="40px" height="80px">#ffe00  #799fc</td>
+<td style="background-image:linear-gradient(to right, rgb(0, 65, 106), rgb(228, 229, 230)); background: #0416a;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, rgb(0, 65, 106), rgb(228, 229, 230));  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, rgb(0, 65, 106), rgb(228, 229, 230)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      " width="40px" height="80px">#0416a  #e4e5e6</td>
+</tr>
 </table> 
 
 ## 色彩搭配-低调色
 
 
 
-table>
+<table>
 <tr>
 <td style="color:#ffffff;background:#bf242a; " width="40px" height="40px">桜色 #bf242a</td>
 <td style="color:#333333;background:#fdeff2; " width="40px" height="40px">薄桜 #fdeff2</td>
