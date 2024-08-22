@@ -146,7 +146,7 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
 API等代码变动，需要全面功能覆盖测试，保证功能正常。   
 
 
-## 四、附加
+## 四、hibernate 升级
 
 本例 hibernate 5.0.1.Final  升级 5.4.3
 
@@ -187,6 +187,8 @@ org.hibernate.HibernateException现在扩展了javax.persistence.PersistenceExce
 SessionFactoryImplementor 曾经有许多与管理和访问实体和集合持久化相关的方法。由于无论如何我们都需要处理 JPA Metamodel 合约，所以我继续将所有代码移至新的org.hibernate.metamodel.spi.MetamodelImplementor中
 
 SessionFactory 和 SessionFactoryImplementor 各自都有许多处理缓存区域的方法。自 5.0 以来，其中许多方法已被弃用，这些方法将被删除。然而，该功能已移至org.hibernate.Cache和org.hibernate.engine.spi.CacheImplementor合约中，帮助实现 JPA 的javax.persistence.Cache角色。
+
+> 启动错误 Caused by: org.springframework.beans.factory.NoUniqueBeanDefinitionException: No qualifying bean of type'javax.persistence.EntityManagerFactory' available: expected single matching bean but found 2: sessionFactory,entityManagerFactory
 
 
 Hibernate 5.3 添加了对 JPA 2.2 规范的支持
@@ -274,3 +276,278 @@ JpaRepositoryConfiguration 的作用包含了 @EnableJpaRepository 。
 
 SpringData Jpa [官方spring-data-examples](https://github.com/spring-projects/spring-data-examples/tree/main/jpa)
 
+
+
+## 五、升级主动要变动
+
+补 `spring-boot-starter-validation`
+
+```groovy
+compile('org.springframework.boot:spring-boot-starter-data-jpa')
+compile('org.springframework.boot:spring-boot-starter-validation')
+```
+
+**org.hibernate.MappingException**
+
+> org.hibernate.MappingException: The increment size of the [xyz] sequence is set to [50] in the entity mapping while the associated database sequence increment size is [1]
+
+@SequenceGenerator定义
+
+```java
+@Target({TYPE, METHOD, FIELD})   
+@Retention(RUNTIME)  
+public @interface SequenceGenerator {  
+ String name();  
+ String sequenceName() default "";  
+ int initialValue() default 0;  
+ int allocationSize() default 50;  
+}
+```
+- name属性表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中。 
+- sequenceName属性表示生成策略用到的数据库序列名称。 
+- initialValue表示主键初识值，默认为0。 
+- allocationSize表示每次主键值增加的大小，例如设置成1，则表示每次创建新记录后自动加1，默认为50。 
+
+需要将 allocationSize 设置为 1 。
+
+
+**JPA / Hibernate API 变化**
+
+旧版
+
+```java
+public interface CrudRepository<T, ID extends Serializable> extends Repository<T, ID> {
+
+<S extends T> S save(S entity);
+<S extends T> Iterable<s> save(Iterable<s> entities);
+//@return the entity with the given id or {@literal null} if none found
+T findOne(ID id) ;
+boolean exists(ID id);
+Iterable<T> findAll();
+Iterable<T> findAll(Iterable<ID> ids);
+long count();void delete(ID id) ;
+void delete(T entity);
+void delete(Iterable<? extends T> entities);
+void deleteAll();
+}
+```
+
+新版
+
+```java
+public interface CrudRepository<T, ID> extends Repository<T,ID> {
+<S extends T> S save(S entity);
+<S extends T> Iterable<S> saveAll(Iterable<s> entities);
+//@return the entity with the given id or {@literal Optional#empty()l if none found.
+Optional<T> findById(ID id);
+boolean existsById(ID id);
+Iterable<T> findAll();
+Iterable<T> findAllById(Iterable<ID> ids);
+long count();
+void deleteById(ID id) ;
+void delete(T entity);
+void deleteAllById(Iterable<? extends ID> ids);
+void deleteAll(Iterable<? extends T> entities);
+void deleteAll();
+}
+```
+
+旧API
+
+T findone (ID id)  -参数不为空，找不到值可以返回null
+
+新API
+
+(1) `<S extends T> Optional<s> findone (Example<s> example);` --参数写法更换，返回optional-参数写法更换，返回optional来源 JpaSpecificationExecutor来源 QueryByExampleExecutor
+(2) `Optional<T> findone(@Nullable Specification<T> spec);`
+(3) `Optional<T> findById(ID id) ;`.--参数不为空，返回optional来源 CrudRepository
+(4) `T getById(ID id);`（本意替换getOne方法）参数不为空，找不到值EntityNotFoundException来源 JpaRepository
+
+旧：
+
+`Iterable<T> findAll() ;`
+`Iterable<T> findAll(Iterable<ID> ids) ;`
+
+新：
+
+`List<T> findAllById(Iterable<ID> ids);` 来源JpaRepository
+`<S extends T> List<s> findAll (Example<s> example) ;` 来源JpaRepository
+`<S extends T> List<s> findAll(Example<s> example, Sort sort) ;` 来源JpaRepository
+
+旧：
+
+`<S extends T> S save(S entity);` 来源 CrudRepository
+`<S extends T> Iterable<s> save(Iterable<s> entities) ;` 来源 CrudRepository
+
+新：
+分离save,saveAll来源 CrudRepository
+
+`<S extendsT> S save(S entity);`
+<`S extendsT> List<s> saveAll(Iterable<S> entities) ;`
+
+旧：
+
+`void delete(ID id);` 来源 CrudRepository
+`void delete(T entity);`
+`void delete(Iterable<? extends T> entities);`
+
+新：
+
+`void deleteById(ID id);` 来源CrudRepository
+`void deleteById(T entity);`·`
+`void deleteAllById(Iterable<? extends ID> ids);`·`
+
+分页：
+
+旧：
+```
+Pageable pageable = new PageRequest(page.getPageNo()-1, page.getPageSize());
+Pageable pageable = PageRequest.of (pageNo-1,pageSize, Sort.by(orders)) ;
+```
+新 
+```
+Pageable pageable = PageRequest.of(page.getPageNo()-1, page.getPageSize()) ;
+Pageable pageable = PageRequest.of(pageNo-1,pageSize, Sort.by(orders)) ;
+```
+
+**Springboot**
+
+- gradle 版本 > gradle 6.9 
+- Tomcat 9
+
+
+spring boot 1.5.13
+
+```
+server.session.timeout=3600
+
+logging.path=/app/logs
+
+```
+
+spring boot 2.5.13
+
+```
+server.servlet.session.timeout=30m
+server.servlet.session.timeout=3600s
+
+logging.file.path=/app/logs
+```
+
+
+对应取 session的超时时间变化
+
+```
+serverProperties.getSession().getTimeout()
+Duration duration =serverProperties.getServlet().getSession().getTimeout():
+```
+
+
+路径变化
+
+```
+importorg.springframework.boot.web.support.SpringBootServletInitializer;
+变更为
+importorg.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+```
+
+
+`org.springframework.web.servlet.config.annotation.WebMvcConfigurepAdapter` 过期
+使用 `org.springframework.web.servlet.config.annotation.WebMvcConfigurer` 替代;
+
+
+
+**druid 强制校验**
+
+```groovy
+compile('com.alibaba:druid:1.2.9')
+```
+
+
+> java.sql.SQLException: keepAliveBetweenTimeMillis must be grater than timeBetweenEvictionRunsMillis
+
+调大 `spring.datasource.keepAliveBetweenTimeMillis=120000`
+
+
+
+**适配jedis版本**
+
+```groovy
+compile('redis.clients:jedis:3.6.3')
+```
+
+
+
+
+spring-session 组件变化
+
+原适配 spring boot 1.5.13
+
+```groovy
+compile('org.springframework.session:spring-session')
+```
+
+对应表脚本
+
+```sql
+CREATE TABLE SPRING_SESSION (
+    SESSION_ID VARCHAR2 (36) NOT NULL ENABLE,
+    CREATION_TIME NUMBER(19) NOT NULL ENABLE,
+    LAST_ACCESS_TIME NUMBER(19) NOT NULL ENABLE,
+    MAX_INACTIVE_INTERVAL NUMBER(1O) NOT NULL ENABLE,
+    PRINCIPAL_NAME VARCHAR2 (100),
+    CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (SESSION_ID)
+);
+
+COMMENT ON TABLE SPRING_SESSION IS '会话表';
+
+CREATE INDEX SPRING_SESSION_IX1 on SPRING_SESSION (LAST_ACCESS_TIME) GLOBAL ;
+
+CREATE TABLE SPRING_SESSION_ATTRIBUTES (
+    SESSION_ID VARCHAR2 (36) NOT NULL ENABLE,
+    ATTRIBUTE_NAME VARCHAR2 (20O) NOT NULL ENABLE,
+    ATTRIBUTE_BYTES BLOB,
+    CONSTRAINT "SPRING_SESSION_ATTRIBUTES_PR" PRIMARY KEY (SESSION_ID, ATTRIBUTE_NAME),
+    CONSTRAINT "SPRING_SESSION_ATTRIBUTES_FK" FOREIGN KEY (SESSION_ID) REFERENCES SPRING_SESSION(SESSION_ID) ON DELETE CASCADE
+);
+
+COMMENT ON TABLE SPRING_SESSION_ATTRIBUTES IS '会话参数表';
+
+CREATE INDEX SPRING_SESSION_ATTRIBUTES_IX1 on SPRING_SESSION_ATTRIBUTESSESSION_ID)GLOBAL；
+```
+
+
+升级适配 spring boot 2.5.13
+
+```groovy
+compile('org.springframework.session:spring-session-core')
+compile('org.springframework.session:spring-session-jdbc')
+```
+
+对应表脚本
+
+```sql
+CREATE TABLE SPRING_SESSION (
+    PRIMARY_ID CHAR(36) NOT NULL,
+    SESSION_ID CHAR(36) NOT NULL,
+    CREATION_TIME NUMBER(19,0) NOT NULL,
+    LAST_ACCESS_TIME NUMBER(19,0) NOT NULL,
+    MAX_INACTIVE_INTERVAL NUMBER(1O,0) NOT NULL,
+    EXPIRY_TIME NUMBER(19,0) NOT NULL,
+    PRINCIPAL_NAME VARCHAR2 (100 CHAR),
+    CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (PRIMARY_ID)
+);
+
+CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON SPRING_SESSION (SESSION_ID) ;
+
+CREATE INDEX SPRING_SESSION_IX2 ON SPRING_SESSIONI(EXPIRY_TIME);
+CREATE INDEX SPRING_SESSION_IX3 ON SPRING_SESSION (PRINCIPAL_NAME) ;
+
+CREATE TABLE SPRING_SESSION_ATTRIBUTES (
+    SESSION_PRIMARY_ID CHAR(36) NOT NULL,
+    ATTRIBUTE_NAME VARCHAR2 (200 CHAR) NOT NULL,
+    ATTRIBUTE_BYTES BLOB NOT NULL,
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY(SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY(SESSION_PRIMARY_ID) REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
+);
+```
