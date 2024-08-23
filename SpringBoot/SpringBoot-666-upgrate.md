@@ -280,6 +280,40 @@ SpringData Jpa [官方spring-data-examples](https://github.com/spring-projects/s
 
 ## 五、升级主要变动
 
+`build.gradle` 变化
+
+```groovy
+buildscript ext {
+    //springBootVersion = '1.5.l3.RELEASE' 
+    SpringBootVersion = '2.5.12'
+    repositories {
+        mavenLocal()
+        maven {
+           url "http://your.repository.com/artifactory/property"
+        }
+        dependencies{
+            classpath "org.springframework:springloaded:1.2.7.RELEASE"
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") {
+                exclude module: 'jackson-annotations'
+                exclude module: 'jackson-core'
+                exclude module: 'jackson-databind'
+                exclude module: 'jackson-module-parameter-names'
+            }
+            //classpath("io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE")
+            classpath("io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE")
+        }
+    }
+
+apply plugin: 'java'
+//apply plugin:: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+
+dependencies{
+
+    }
+}
+```
 
 
 **补充依赖 `spring-boot-starter-validation`**
@@ -357,7 +391,7 @@ public interface CrudRepository<T, ID> extends Repository<T,ID> {
 
 旧API
 
-T findone (ID id)  -参数不为空，找不到值可以返回null
+`T findone (ID id)`  -参数不为空，找不到值可以返回null
 
 新API
 
@@ -492,8 +526,6 @@ compile('com.alibaba:druid:1.2.9')
 ```groovy
 compile('redis.clients:jedis:3.6.3')
 ```
-
-
 
 
 **spring-session 组件变化**
