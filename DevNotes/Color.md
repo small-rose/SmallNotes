@@ -1780,10 +1780,10 @@ nav_order: 2
 </tr>
 
 <tr>
-<td >#0416a \t &nbsp;&nbsp;  #799fc</td>       
-<td >#f7f8f8  \t &nbsp;&nbsp;  #acbb78</td>
-<td >#ffe00  \t  &nbsp;&nbsp;  #799fc</td>
-<td >#0416a  \t  &nbsp;&nbsp;  #e4e5e6</td>
+<td >#0416a               #799fc</td>       
+<td >#f7f8f8              #acbb78</td>
+<td >#ffe00               #799fc</td>
+<td >#0416a               #e4e5e6</td>
 </tr>
 </table> 
 
