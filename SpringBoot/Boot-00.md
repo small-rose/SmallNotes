@@ -14,4 +14,6 @@ nav_order: 71
 {: .no_toc .text-delta }
 
 
+ - [SpringMVC中的拦截器不生效的问题解决以及衍生出的WebMvcConfigurationSupport继承问题](https://blog.csdn.net/zyb18507175502/article/details/129407890)
+
 ---
