@@ -315,6 +315,7 @@ GitHub加速下载
 <a href="https://rebozj.com/" titel="" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">Re Bo</a>
 
 <a href="https://adzhp.cn/yin-yue-ruan-jian.html" titel="" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">Music</a>
+<a href="https://www.yeyulingfeng.com/tools/music/" titel="" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">音乐搜索器</a>
 <a href="https://www.onehourlife.com/" titel="" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">One Hour Life</a>
 <a href="https://adzhp.cn/vipdianyingyuduanshipinjiexiziyuansuoyin.html" titel="" target="_blank" class="btn btn-outline fs-3 mb-4 mb-md-0 mr-2">No VIP</a>
 
