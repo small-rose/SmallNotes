@@ -338,9 +338,18 @@ compile('org.springframework.boot:spring-boot-starter-data-jpa')
 compile('org.springframework.boot:spring-boot-starter-validation')
 ```
 
+
+**hibernate5.SessionHolder**
+
+> org.springframework.orm.jpa.EntityManagerHolder cannot be cast to org.Springframework.orm.hibernate5.SessionHolder
+
+解决思路：JPA配置和Hibernate 配置冲突，如果没有使用 jap,可以把HibernateJpaAutoConfiguration这个类的自动化配置排除。
+
 **org.hibernate.MappingException**
 
 > org.hibernate.MappingException: The increment size of the [xyz] sequence is set to [50] in the entity mapping while the associated database sequence increment size is [1]
+
+解决思路：调整@SequenceGenerator注解参数 allocationSize 。
 
 @SequenceGenerator定义
 
