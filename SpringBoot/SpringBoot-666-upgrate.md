@@ -29,7 +29,7 @@ SpringBoot 1.5.13.RELEASE 升级 SpringBoot 2.5.12
 
 常见的有:
 
-```text
+```groovy
 compile('org.springframework.boot:spring-boot-starter-web')
 compile('org.springframework.boot:spring-boot-starter-tomcat')
 compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -69,7 +69,7 @@ implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
 
 后者一般无明细特征，但组件pom中会体现出会spring系组件依赖，如 
 
-```text
+```groovy
 compile('io.springfox:springfox-swagger2:2.10.0')
 compile('io.springfox:springfox-spring-webmvc:2.10.0')
 compile('io.springfox:springfox-swagger-ui:2.l0.0')
@@ -151,7 +151,7 @@ API等代码变动，需要全面功能覆盖测试，保证功能正常。
 
 ## 四、hibernate 升级
 
-本例 hibernate 5.0.1.Final  升级 5.4.3
+本例 hibernate 5.0.1.Final  升级 5.4.33
 
 Hibernate主要是通过三个组件来实现：
 
