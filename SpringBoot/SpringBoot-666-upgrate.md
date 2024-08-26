@@ -203,7 +203,7 @@ Hibernate 5.3 添加了对 JPA 2.2 规范的支持
 @Configuration
 @EnableJpaRepositories
 @EnableTransactionManagement
-class ApplicationConfig {
+public class JpaConfig {
 
   @Bean
   public DataSource dataSource() {
@@ -231,6 +231,14 @@ class ApplicationConfig {
     JpaTransactionManager txManager = new JpaTransactionManager();
     txManager.setEntityManagerFactory(entityManagerFactory);
     return txManager;
+  }
+    
+  /** 兼容历史 sessionFactory
+   **/
+  @Bean
+  public SessionFactory sessionFactory(EntityManagerFactory emf){
+    logger.info(" SessionFactory init success ! ");
+    return emf.unwrap(SessionFactory.class);
   }
 }
 ```
