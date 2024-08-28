@@ -1,14 +1,24 @@
 ---
 layout: default
-title: SpringBoot Custom Annotation
+title: SpringBoot Annotation
 parent: SpringBoot
 nav_order: 180
 ---
 
 
-## 基于SpringBoot的自定义注解
+Here are SpringBoot upgrade experience .
+{: .fs-6 .fw-300 }
 
-## 一、Java注解
+
+## Here are SpringBoot upgrade experience .
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+# 基于SpringBoot的自定义注解
+
+# Java注解
 
 Java 定义的注解分三类。
 
@@ -16,7 +26,7 @@ Java 定义的注解分三类。
 （2）元注解。
 （3）自定义注解。
 
-### 1、普通注解
+## 1、普通注解
 
 普通注解在Java.lang 中有3个：
 
@@ -26,7 +36,7 @@ Java 定义的注解分三类。
 
 - `@SuppressWarnings`：指示编译器去忽略注解中声明的警告。
 
-### 2、元注解
+## 2、元注解
 
 元注解就是用来修饰注解的注解。通俗的理解为为了开发人员方便开发自定义注解的工具型注解，简单说的就类似JDK工具包作用。
 
@@ -82,7 +92,7 @@ Java 定义的注解分三类。
 ```    
 注解`@Person`被`@Inherited`修饰，`Student`被 `@Person`修饰，ZhangSan继承Student（ZhangSan上又无其他注解），那么ZhangSan就会拥有Person这个注解。
 
-### 3、新增注解
+## 3、新增注解
 
 Java7之后增加的3个注解：
 
@@ -93,14 +103,14 @@ Java7之后增加的3个注解：
 - `@Repeatable`：Java 8 开始支持，标识某注解可以在同一个声明上使用多次。
 
 
-### 3、自定义注解
+## 4、自定义注解
 
 开发者自己开发的注解。
 
 
-## 二、写个自定义注解
+# 写个自定义注解
 
-### 1、需求
+## 1、需求
 
 还记得上个月面试中遇到一个问题，怎么让一个接口限制在1分钟内访问200次。
 
@@ -111,7 +121,7 @@ Java7之后增加的3个注解：
 先用注解的方式实现，后面再用这个BaseController的方式实现。
 
 
-### 2、分析与设计
+## 2、分析与设计
 
 要自定义注解，同时要可以灵活的配置每个接口在自己的时间窗口期内限制指定的次数，不同的接口限定方式肯定是不一样的，同时也可以给默认值。
 
@@ -136,16 +146,16 @@ Java7之后增加的3个注解：
 **思路三：**完成之后可以将注解开发成独立的starter组件。
 
 
-## 三、自定义注解实现
+# 自定义注解实现
 
 
-### 1、准备工作
+## 1、准备工作
 
 这里将自定义注解取个名字，因为要用不同的思路实现，注解的名字就不写一样的了。
 
 准备工作，因为想让数据自动失效，同时又减少耦合依赖，就不使用第三方缓存中间件，搞个属于自己的缓存管理器，这里借鉴已有的缓存管理器，并做一些细节调整：
 
-#### 1.1、环境搭建
+## 1.1、环境搭建
 
 创建springboot工程，因为要测试Restful接口，需要引入`spring-boot-starter-web`，然后准备个controller用来测试:
 
@@ -171,7 +181,7 @@ public class ApiController extends BaseController {
 
 
 
-#### 1.2、缓存管理
+## 1.2、缓存管理
 
 ```java
 package com.xiaocai.base.demo.cache;
@@ -382,7 +392,7 @@ public class MyCacheManager {
 ```
 这个缓存管理器可以设置缓存数据的有效时间，并且时间到了之后就会自动过期。
 
-#### 1.3、统一返回格式
+### 1.3、统一返回格式
 
 包装使用统一的返回格式Json
 
@@ -445,14 +455,14 @@ public class CommonResult<T> {
 }
 ```
 
-#### 1.4、测试工具
+### 1.4、测试工具
 
 浏览器或者PostMan 均可。
 
 
-### 2、配合拦截器使用
+## 2、配合拦截器使用
 
-#### 2.1、先定义注解：
+### 2.1、先定义注解：
 
 ```java 
 package com.xiaocai.base.demo.annotation;
@@ -500,7 +510,7 @@ public @interface ApiChecked {
 
 ```
 
-#### 2.2、利用拦截器解析注解
+### 2.2、利用拦截器解析注解
 
 这里是经过多个修改调整之后最终代码：
 
@@ -640,7 +650,7 @@ public class ApiCheckedInterceptor implements HandlerInterceptor {
 }
 ```
 
-#### 2.3、注册拦截器
+### 2.3、注册拦截器
 
 ```java
 package com.xiaocai.base.demo.config;
@@ -668,9 +678,9 @@ public class InterceptorTrainConfig implements WebMvcConfigurer {
 
 ```
 
-#### 2.4、添加注解使用
+### 2.4、添加注解使用
 
-```JAVA
+```java
 package com.xiaocai.base.demo.controller;
 
 import lombok.extern.slf4j.Slf4j;
@@ -705,7 +715,7 @@ public class ApiController  {
 比如 `checkUser()` 添加了 `@ApiChecked` 注解，并且设置了注解参数 second = 10, totalCount = 3，表示10秒内，只能访问3次，10秒内超过3次就会被拦截器拦截。
 
 
-#### 2.5、注解测试
+### 2.5、注解测试
 
 启动工程访问验证。我的端口号是8805。
 
@@ -737,7 +747,7 @@ public class ApiController  {
 也可以查看对应的控制台日志打印信息。
 
 
-### 3、配合AOP使用
+## 3、配合AOP使用
 
 需要引入aop的包
 
@@ -748,7 +758,7 @@ public class ApiController  {
         </dependency>
 ```
 
-#### 3.1、先定义注解：
+### 3.1、先定义注解：
 
 为了和拦截器方式区分，我就换了一个注解名字，并且里面加了其他标记，都是调整完善之后的：
 
@@ -806,7 +816,7 @@ public @interface LimitChecked {
 
 ```
 
-#### 3.2、APO处理
+### 3.2、APO处理
 
 ```java
 package com.xiaocai.base.demo.aspect;
@@ -957,7 +967,7 @@ public class LimitCheckedAspect {
 }
 ```
 
-#### 3.3、添加注解使用
+### 3.3、添加注解使用
 
 ```java
 package com.xiaocai.base.demo.controller;
@@ -1040,7 +1050,7 @@ public class ApiController {
 }
 ```
 
-#### 2.5、注解测试
+### 2.5、注解测试
 
 启动工程访问验证。我的端口号是8805。
 
@@ -1074,7 +1084,7 @@ public class ApiController {
 
 示例工程地址：[demo-project-base](https://github.com/small-rose/demo-project-base)
 
-### 4、starter组件
+## 4、starter组件
 
 到此，拦截器模式和AOP模式全部完成。如果在进行调整可以将注解开发成独立的starter组件，实现和springboot项目组件化。在自己需要的项目中使用。
 
