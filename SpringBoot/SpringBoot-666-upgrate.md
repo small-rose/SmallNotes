@@ -101,7 +101,7 @@ compile('com.github.xiaoymin:swagger-bootstrap-ui:1.9.6'){
 
 如webservice相关组件: axis、jaxrpc、caf 
 
-如工具类组件: snakeyaml、[xstream](http://x-stream.github.io/) 、[json-smart](https://gitcode.com/gh_mirrors/js/json-smart-v2/overview) 、json、fastjson、kaptcha、hutool、commons-系列
+如工具类组件: snakeyaml、[xstream](http://x-stream.github.io/) 、[json-smart](https://gitcode.com/gh_mirrors/js/json-smart-v2/overview) 、[excel-streaming-reader](https://github.com/monitorjbl/excel-streaming-reader/releases) 、json、fastjson、kaptcha、hutool、commons-系列
 
 其他： [druid](https://github.com/alibaba/druid/wiki)
 
