@@ -2,6 +2,7 @@
 layout: default
 title: Js Browser
 parent: JavaScript
+grand_parent: Front-end Dev
 nav_order: 10
 ---
 
