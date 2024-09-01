@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Js Browser
-has_children: false
 parent: JavaScript
 nav_order: 10
 ---
