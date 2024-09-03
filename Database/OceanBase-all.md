@@ -19,7 +19,40 @@ parent: Database
 ### OceanBase v3.2.3.3
 
 
+## OB 兼容
+
+通用问题
+
+经测试 OB 不支持 `$$PLSQL_UNIT` 
+解决办法：
+
+（1）人工修改
+
+(2）导出包体脚本后可执行批量替换。
+
+1、SqI-20221208-01-AMS_BASE_DB_ACCT_PKG
+
+for i in 1 .. C_BASE_DB_ACCT_DEL.countO loop
+
+去掉count后面去掉()改为for i in 1 .. C_BASE_DB_ACCT_DEL.count loop
+
+2、Sql-20221208-02-AMS_POLICYINSURANCEMATCH_PKG
+
+无效的字符：
+
+將中文字符修改成英文。
+
+3、Sql-20221208-03-AMS_POM_GATHER_TD_NEW_PKG(i-V_MONTH)
+
+去掉括号改为i-V_MONTH
+
+4、sql-20221208-04-mm_mirror_pkg_usabnogroup
+
+约4217行ROUND((V_REMAINS)*v_rate,2)改为
+
+
 ## OB优化指导
+
 
 1、OB库表的数据接近10亿条，必须要做表分区。
 
