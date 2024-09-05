@@ -411,7 +411,7 @@ function addEvent(element, tvpe,method){
 }
 
 function show(){
-    alert("我是show方法！");
+    alert("我是show方法!");
 }
 
 addEvent(obt,"click", show);
@@ -419,9 +419,253 @@ addEvent(obt,"click", show);
 ```
 
 
-# 表单事件
+# 五、表单事件
+
+## （1）表单文档事件
+
+焦点：js 当前正在和用户发生交互的节点称为焦点。可以类比为人类目光汇聚的地方。
+
+语法：获得焦点和失去焦点事件既可以使用 DOM1 绑定也可以使用 DOM2 绑定。
+
+>获得焦点和失去焦点事件均不支持事件冒泡。
 
 
-# 键盘事件
+```html
+<body>
+<form action="">
+用户名：<input type="text” class="username"/><br>
+手机：<input type-"text"/><br>
+<input type="submit" value="提交"/>
+</form>
+<script>
+var username = document.querySelector(".username");
+//onfocus：获取焦点事件
+username.onfocus = function(){
+    this. style.cssText = "border:1px solid yellow;background:grey:"
+}
+//onblur：失去焦点事件
+username.onblur = function(){
+    this. style.cssText = "";
+}
+</script>
+</body>
+```
 
-# 滚动事件
+## （2）oninput 事件和 onchange 事件
+
+onchange事件: 元素发生变化的时候，就会触发。
+
+oninput事件: 当给元素输入内容的时候，就会触发。
+
+
+区别：
+- onchange:当失去焦点的时候才会触发此事件。
+- oninput:当输入内容的时候，会立即触发。
+
+
+
+```html
+<style>
+.userfalse{ color: red; }
+.usertrue{ color: green;}
+</style>
+<body>
+<form action="">
+用户名：<input type="text” class="username"/><span class="usershow"></span><br>
+手机：<input type-"text"/><br>
+<input type="submit" value="提交"/>
+</form>
+<script>
+var username = document.querySelector(".username");
+var usershow = document.querySelector(".usershow");
+//oninput：内容变化
+username.oninput = function(){
+   console.log(" oninput 事件")
+    if(username.value.Iength <5 || username.value.length>20){
+        usershow.innerHTML ="错误，请输入5-20个字符！";
+        //usershow.className = "userfalse";
+        usershow.setAttribute("class","userfalse");
+    }
+    else {
+        usershow.innerHTML ="正确";
+        usershow.setAttribute("class","usertrue");
+    }
+    console.log("触发了oninput事件!");
+}
+
+//onchange：元素发生变化触发此事件
+username.onchange = function(){
+   console.log(" onchange 事件")
+}
+</script>
+</body>
+```
+
+# 六、键盘事件
+
+键盘事件是指当用户在操作键盘的时候会自动被触发的事件。
+
+通常有以下三种：
+
+- (1) onkeydown:用户按下任意键都可以触发这个事件。如果按住不放，事件会被连续触发。
+
+- (2) onkeypress:用户按下任意键都可以触发这个事件(功能键除外)。如果按住不放，事件会被连续触发。
+
+- (3) onkeyup: 用户释放按键时触发。
+
+> ： 键盘事件一般绑定在需要用户输入的元素上( 例如 input)，但是由于键盘事件默认采用事件冒泡机制，因此将键盘事件直接绑定在 body 之上也是允许的。
+
+**键盘属性**
+
+key 和 keyCode 属性
+
+- Key:具体是哪一个键
+- keyCode:返回 keydown 何 keyup 事件发生的时候按键的代码，以及
+- keypress 事件的 Unicode 字符(ascii 码值)。 如: A:65,a:97,0:48,空格键：32.
+
+```html
+
+<style>
+.box{ width:100px; height: 100px; background: red; position: relative; left: 50%; bottom:-350px:}
+@keyframes fly { 100%{transform: translateY(200px)}
+</style>
+<body>
+<div class-"box"></div>
+<script>
+var box = document.querySclector(". box") ;
+documcnt.onkeydown =funetion(e） {
+switch(keyCode)
+	case 37:
+		box.style.left = box.offsetLeft + 25+"px”break;
+	case 38:
+		box.style.top = box.offsetTop +  20 +"px"; break;
+	case 39:
+        box.style.left = box.offsetLeft + 25+"px"; break;
+	case 40:
+        box.style.top = box.offsetTop + 20 +"px"; break;
+	case 32:
+		var bomp = document.createElement("div");
+		box.appendChild(bomp);
+		bomp.style.width = "10px";
+		bomp.style.height = "30px";
+		bomp.style.background = "green";
+        bomp.style.position = "absolute";
+		bomp.style.left = "46px";
+		bomp.style.animation ="fly 2s";
+		break;
+</script>
+```
+
+# 七、滚动事件
+
+## 回到页面顶部
+
+(1) 锚点方式
+
+```html
+<body style="height:2000px;">
+<div id="topAnchor"></div>
+<a href="#topAnchor" style="position:fixed;right:0;bottom:0">回到顶部
+</a>
+</body>
+```
+
+示例:
+
+```html
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title></title>
+<style>
+html { height:2000px;} 
+a { position:fixed; right:0; bottom:0;}
+</style>
+</head>
+<body>
+<div id="top">这是最顶端</div>
+<a href="#top">回到顶部</a>
+</body>
+</html>
+```
+
+(2) scrollTop 属性
+
+
+scrollTop 属性表示被隐藏在内容区域上方的像素数（文档距离顶部的距离）。
+
+元素未滚动时，scrollTop 的值为 0，如果元素被垂直滚动了，scrollTop 的值大于 0，且表示元素上方不可见内容的像素宽度。
+
+由于 scrollTop 是可写的，可以利用 scrollTop 来实现回到顶部的功能。
+
+
+```html
+<body style="height:2000px;">
+<button id="test" style="position:fixed;right:0;bottom:0;"> 回到顶部</button>
+<script>
+test.onclick = function(){
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+</script>
+</body>
+```
+
+
+```html
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title></title>
+<style>
+html { height:2000px;} 
+button { position:fixed; right:0; bottom:0;}
+</style>
+</head>
+<body>
+<div id=top">这是最顶端</div>
+<button>回到顶部</button>
+<script>
+    var obt = document.querySelector("button");
+    // obt.addEventListener("click", back);
+    
+    obt.onclick = function()(
+        back();
+    }
+    function back(){
+        document.documentElement.scrollTop = 0;
+        //document. body. scrollTop = 0;
+    }
+</script>
+</body>
+</html>
+```
+
+（3）滚动事件
+
+onscroll：滚动事件，onscroll 事件会在【文档】或【元素】发生滚动操作时触发。
+
+```
+window.onscroll = function(){
+}
+```
+
+
+```html
+<html>
+<head lang-"en">
+<meta charset-"UTF-8">
+<title></title>
+<style>
+html{width:2000px; height:2000px;}
+</style>
+</head>
+<body>
+<script>
+window.onscrol1 = function(){
+	console.log("onscroll被触发了！");
+}
+</script>
+</body>
+</html>
+```
