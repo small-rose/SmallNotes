@@ -28,17 +28,16 @@ nav_order: 10
 
 ## 2、事件分类
 
-1、鼠标事件
+（1）鼠标事件
 
 onclick、ondblclick、onmouseover、onmouseout、onmousedown、onmou
 seup、onmousemove
 
-2、HTML 事件
+（2）HTML 事件
 
-onload、onscoll、onsubmit、onchange、onfoucs(获取焦点)，onblur(失去
-焦点)
+onload、onscoll、onsubmit、onchange、onfoucs(获取焦点)，onblur(失去焦点)
 
-3、键盘事件
+（3）键盘事件
 
 - onkeydown: 键盘按下时触发
 - onkeypress:键盘按下并松开的瞬间触发
@@ -50,12 +49,14 @@ onload、onscoll、onsubmit、onchange、onfoucs(获取焦点)，onblur(失去
 
 绑定操作发生在 HTML 代码中的事件，称为 HTML 事件。
 
-语法：on+事件=`函数();函数();函数();......`
-
+语法：
+```
+on+事件=`函数();函数();函数();......`
+```
 HTML 事件的移除方式：
-
+```
 元素.setAttribute('on+事件名'，null);
-
+```
 HTML 事件缺陷：耦合性太强了，修改一处另一处也要修改。
 
 当函数没有加载成功时，用户去触发事件，则会报错。
@@ -241,7 +242,9 @@ outer.onclick = function(){
 - returnValue = false; 
 
 ```html
-<!DOCTYPE html><html><headlang="en">
+<!DOCTYPE html>
+<html>
+<head lang="en">
 <meta charset="uTF-8">
 <title></title>
 <style></style>
@@ -255,7 +258,7 @@ outer.onclick = function(){
 <input type="submit" value="提交表单"/>
 </form>
 <script>
-var oa = document.querySelcctor("a");
+var oa = document.querySelector("a");
 var oform = document.querySelector("form");
 var username = document. getElementsByName(username)[0];
 oform.onsubmit = function(){
@@ -264,7 +267,7 @@ oform.onsubmit = function(){
         document.forml.uscrname.focus();//获取焦点
         event.preventDefault();//阻止默认提交
     }
-    console.log("密码是："+document["form1"]["pwd"]["value"]):
+    console.log("密码是："+document["form1"]["pwd"]["value"]);
 }
 oa.addEventListener("click",function(e){
     //event.preventDefault();/阻止默认链接-方法1
@@ -273,40 +276,19 @@ oa.addEventListener("click",function(e){
 }
 </script>
 </body>
-```
-<a href="http://www.baidu.com">百度</a>
-<button>单击</button>
-<form action="reg.php" method="post" name="form1">
-用户名：<input type="text" name="username"/><br/>
-密码：<input type="password" name="pwd"/><br/>
-<input type="submit" value="提交表单"/>
-</form>
-<script>
-var oa = document.querySelcctor("a");
-var oform = document.querySelector("form");
-var username = document. getElementsByName(username)[0];
-oform.onsubmit = function(){
-    if(username.value == ""){
-        alert("用户名不能为空！");
-        document.forml.uscrname.focus();//获取焦点
-        event.preventDefault();//阻止默认提交
-    }
-    console.log("密码是："+document["form1"]["pwd"]["value"]):
-}
-oa.addEventListener("click",function(e){
-    //event.preventDefault();/阻止默认链接-方法1
-    e.preventDefault();
-    e.returnValue=false ;//阻比默认链接-方法2
-}
-</script>
+</html>
+``` 
 
 
 ## 4、DOM0 和 DOM2 的区别
 
-DOM0 如果你写了多个事件，只应用最后一个！
+DOM0 和 DOM2 的区别
 
-Dom2 如果您写了多个事件，它会都应用。
+- DOM0 如果你写了多个事件，只应用最后一个！
 
+- Dom2 如果您写了多个事件，它会都应用。
+
+[DOM0, DOM1, DOM2, DOM3事件的区别与详解](https://blog.51cto.com/knifeedge/5010718)
 
 
 # 三、鼠标事件 
@@ -388,7 +370,7 @@ btn9.mouseout = function(){
 ```
 
 
-# 4、IE 事件
+# 四、IE 事件
 
 ## 1、事件绑定
 
@@ -415,8 +397,8 @@ ps：匿名函数无法被移除。
 
 ```html
 <script>
-/封装一个函数，让各个湖览器都能给元素添加事件
-//ele应ent：元素，type：事件类型，method：函数方法
+//封装一个函数，让各个湖览器都能给元素添加事件
+//element：元素，type：事件类型，method：函数方法
 var obt = document.querySelector(button"):
 function addEvent(element, tvpe,method){
     if(element. addEventListener) {
