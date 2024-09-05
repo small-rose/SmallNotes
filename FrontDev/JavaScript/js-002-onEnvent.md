@@ -6,11 +6,8 @@ grand_parent: Front-end Dev
 nav_order: 10
 ---
 
-
- Here are commonly used JavaScript examples .
+ Here are JavaScript examples .
 {: .fs-6 .fw-300 }
-
-
 
 1. TOC
 {:toc}
@@ -314,6 +311,14 @@ Dom2 如果您写了多个事件，它会都应用。
 
 # 三、鼠标事件 
 
+语法：
+```
+元素.on+鼠标事件名称 = 调用函数
+```
+例如：
+```
+d1.ondblclick = function () { console.log('这是 d1');}
+```
 
 鼠标事件指与鼠标相关的事件，具体的事件主要有以下10个事件：
 
@@ -322,10 +327,10 @@ Dom2 如果您写了多个事件，它会都应用。
 - (3)  mousedown：按下鼠标键时触发
 - (4)  mouseup：释放按下的鼠标键时触发
 - (5)  mousemove：当鼠标在节点内部移动时触发。当鼠标持续移动时，该事件会连触发。
-- (6)  mouseenter：鼠标进入一个节点时触发，进入子节点不会触发这个事件
-- (7)  mouseleave：鼠标离开一个节点时触发，离开父节点不会触发这个事件
-- (8)  mouseover：鼠标进入一个节点时触发，进入子节点会再一次触发这个事件
-- (9)  mouseout：鼠标离开一个节点时触发，离开父节点也会触发这个事件
+- (6)  mouseenter：鼠标进入一个节点时触发，进入子节点不会触发这个事件(不冒泡)
+- (7)  mouseleave：鼠标离开一个节点时触发，离开父节点不会触发这个事件(不冒泡)
+- (8)  mouseover：鼠标进入一个节点时触发，进入子节点会再一次触发这个事件(冒泡)
+- (9)  mouseout：鼠标离开一个节点时触发，离开父节点也会触发这个事件(冒泡)
 - (10)  wheel：滚动鼠标的滚轮时触发
 
 ```html
@@ -381,3 +386,60 @@ btn9.mouseout = function(){
 }
 </sctipt>
 ```
+
+
+# 4、IE 事件
+
+## 1、事件绑定
+
+在 js 脚本中，通过 attachEvent 函数绑定事件
+语法：
+```
+元素.attachEvent(type,listener)
+```
+- type:事件类型。【有 on！有 on！有 on！】
+- listener:监听函数，绑定的函数
+> 注意:如果绑定多个函数，按照函数书写的倒叙执行。
+
+## 2、事件解除
+
+IE 下 DOM2 级事件的移除方式：
+```
+元素.detachEvent(type,listener)
+```
+ps：匿名函数无法被移除。
+
+## 3、事件兼容
+
+由于【IE 浏览器中的事件绑定】和【非 IE 浏览器中的事件绑定】方式方法都有所不同。所以单一的某种函数都不能完美解决不同浏览器下的方法绑定问题。
+
+```html
+<script>
+/封装一个函数，让各个湖览器都能给元素添加事件
+//ele应ent：元素，type：事件类型，method：函数方法
+var obt = document.querySelector(button"):
+function addEvent(element, tvpe,method){
+    if(element. addEventListener) {
+        element.addEventListener (type, method)
+    } else if(element.attachEvent) {
+        element.attachEvent ("on"+type, method) ;
+    }else {
+        element['on'+type] = method ;//obt[onclick]= function(){}
+    }
+}
+
+function show(){
+    alert("我是show方法！");
+}
+
+addEvent(obt,"click", show);
+</script>
+```
+
+
+# 表单事件
+
+
+# 键盘事件
+
+# 滚动事件
