@@ -238,6 +238,13 @@ set global ob_trx_idle_timeout = 1200000000000 ;
 
 ```
 
+查租户工作空间内存
+
+```sql
+show variables  like  '%area%'   申宇16:47
+```
+
+
 ## 查视图
 
 ```sql
