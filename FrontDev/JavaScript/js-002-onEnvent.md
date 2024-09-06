@@ -243,8 +243,8 @@ outer.onclick = function(){
 
 ```html
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head>
 <meta charset="uTF-8">
 <title></title>
 <style></style>
@@ -481,7 +481,7 @@ var usershow = document.querySelector(".usershow");
 //oninput：内容变化
 username.oninput = function(){
    console.log(" oninput 事件")
-    if(username.value.Iength <5 || username.value.length>20){
+    if(username.value.length <5 || username.value.length>20){
         usershow.innerHTML ="错误，请输入5-20个字符！";
         //usershow.className = "userfalse";
         usershow.setAttribute("class","userfalse");
@@ -531,7 +531,7 @@ key 和 keyCode 属性
 <body>
 <div class="box"></div>
 <script>
-var box = document.querySclector(". box") ;
+var box = document.querySelector(". box") ;
 document.onkeydown = function(e){
 switch(keyCode)
 	case 37:
@@ -572,8 +572,8 @@ switch(keyCode)
 示例:
 
 ```html
-<html>
-<head lang="en">
+<html lang="en">
+<head >
 <meta charset="UTF-8">
 <title></title>
 <style>
@@ -612,8 +612,8 @@ test.onclick = function(){
 
 
 ```html
-<html>
-<head lang="en">
+<html lang="en">
+<head >
 <meta charset="UTF-8">
 <title></title>
 <style>
@@ -651,8 +651,8 @@ window.onscroll = function(){
 
 
 ```html
-<html>
-<head lang="en">
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <title></title>
 <style>
@@ -661,7 +661,7 @@ html{width:2000px; height:2000px;}
 </head>
 <body>
 <script>
-window.onscrol1 = function(){
+window.onscroll = function(){
 	console.log("onscroll被触发了！");
 }
 </script>
