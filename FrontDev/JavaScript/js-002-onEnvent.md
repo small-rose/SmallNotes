@@ -434,7 +434,7 @@ addEvent(obt,"click", show);
 <body>
 <form action="">
 用户名：<input type="text” class="username"/><br>
-手机：<input type-"text"/><br>
+手机：<input type="text"/><br>
 <input type="submit" value="提交"/>
 </form>
 <script>
@@ -472,7 +472,7 @@ oninput事件: 当给元素输入内容的时候，就会触发。
 <body>
 <form action="">
 用户名：<input type="text” class="username"/><span class="usershow"></span><br>
-手机：<input type-"text"/><br>
+手机：<input type="text"/><br>
 <input type="submit" value="提交"/>
 </form>
 <script>
@@ -652,8 +652,8 @@ window.onscroll = function(){
 
 ```html
 <html>
-<head lang-"en">
-<meta charset-"UTF-8">
+<head lang="en">
+<meta charset="UTF-8">
 <title></title>
 <style>
 html{width:2000px; height:2000px;}
