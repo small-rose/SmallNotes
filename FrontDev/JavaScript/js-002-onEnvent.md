@@ -366,7 +366,7 @@ btn8.mouseover = function(){
 btn9.mouseout = function(){
     console.log("鼠标out离开了");
 }
-</sctipt>
+</script>
 ```
 
 
@@ -433,7 +433,7 @@ addEvent(obt,"click", show);
 ```html
 <body>
 <form action="">
-用户名：<input type="text” class="username"/><br>
+用户名：<input type="text" class="username"/><br>
 手机：<input type="text"/><br>
 <input type="submit" value="提交"/>
 </form>

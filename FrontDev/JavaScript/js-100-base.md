@@ -818,7 +818,7 @@ for(i in arr){
 var person = {
     username:"特朗普"
     age:72,
-    from："加州"
+    from: "加州"
 }
 for(var i in person){
     console.log(i+","+person[i]);
