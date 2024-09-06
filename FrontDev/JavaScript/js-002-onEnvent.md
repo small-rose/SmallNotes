@@ -524,19 +524,18 @@ key 和 keyCode 属性
 - keypress 事件的 Unicode 字符(ascii 码值)。 如: A:65,a:97,0:48,空格键：32.
 
 ```html
-
 <style>
 .box{ width:100px; height: 100px; background: red; position: relative; left: 50%; bottom:-350px:}
-@keyframes fly { 100%{transform: translateY(200px)}
+@keyframes fly { 100%{ transform: translateY(200px) ; } }
 </style>
 <body>
-<div class-"box"></div>
+<div class="box"></div>
 <script>
 var box = document.querySclector(". box") ;
-documcnt.onkeydown =funetion(e） {
+document.onkeydown = function(e){
 switch(keyCode)
 	case 37:
-		box.style.left = box.offsetLeft + 25+"px”break;
+		box.style.left = box.offsetLeft + 25+"px"; break;
 	case 38:
 		box.style.top = box.offsetTop +  20 +"px"; break;
 	case 39:
