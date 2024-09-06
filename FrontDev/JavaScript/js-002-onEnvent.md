@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Js 事件
+title: Js Envent
 parent: JavaScript
 grand_parent: Front-end Dev
 nav_order: 10
