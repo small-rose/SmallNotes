@@ -1,7 +1,7 @@
 ---
 layout: default
 title: ORACLE
-nav_order: 20
+nav_order: 21
 parent: Database
 ---
 
@@ -947,110 +947,6 @@ concat(字符串1, 字符串2)
 将字符串1和字符串2拼接到一起。
 
 
-## PL/SQL 相关
-
-### PLSQL Developer解决中文乱码问题
-
-1.查服务端字符集编码
-
-```sql
-SELECT userenv('language') FROM dual;
-```
-
-结果
-
-```
-    userenv('language')
-1	SIMPLIFIED CHINESE_CHINA.AL32UTF8
-```
-
-2.执行语句 `SELECT * FROM V$NLS_PARAMETERS` 查看第一行中PARAMETER项中为NLS_LANGUAGE 对应的VALUE项中是否和第一步得到的值一样。
-
-```sql
-SELECT * FROM V$NLS_PARAMETERS 
-```
-
-结果
-
-```
-    PARAMETER              VALUE               CON_IN  
-1	NLS_LANGUAGE 	       SIMPLIFIED CHINESE	0
-2	NLS_TERRITORY	       CHINA	            0
-3	NLS_CURRENCY	       ￥	               0
-4	NLS_ISO_CURRENCY	       CHINA	        0
-5	NLS_NUMERIC_CHARACTERS	   .,	            0
-6	NLS_CALENDAR	       GREGORIAN	        0
-7	NLS_DATE_FORMAT	       DD-MON-RR	        0
-8	NLS_DATE_LANGUAGE	   SIMPLIFIED CHINESE	0
-9	NLS_CHARACTERSET	   AL32UTF8         	0
-10	NLS_SORT	           BINARY	            0
-11	NLS_TIME_FORMAT	       HH.MI.SSXFF AM	    0
-12	NLS_TIMESTAMP_FORMAT	DD-MON-RR HH.MI.SSXFF AM	    0
-13	NLS_TIME_TZ_FORMAT	    HH.MI.SSXFF AM TZR	            0
-14	NLS_TIMESTAMP_TZ_FORMAT	DD-MON-RR HH.MI.SSXFF AM TZR	0
-15	NLS_DUAL_CURRENCY	    ￥	               0
-16	NLS_NCHAR_CHARACTERSET	AL16UTF16	        0
-17	NLS_COMP	            BINARY	            0
-18	NLS_LENGTH_SEMANTICS	BYTE	            0
-19	NLS_NCHAR_CONV_EXCP	    FALSE	            0
-```
-
-
-
-如果不是，需要设置环境变量.PLSQL客户端使用的编码和服务器端编码不一致,插入中文时就会出现乱码.
-
-**NLS_LANGUAGE_NLS_TERRITORY.NLS_CHARACTERSET**
-
-3.设置环境变量计算机->属性->高级系统设置->环境变量->新建
-
-设置变量名：`NLS_LANG`,
-变量值：`SIMPLIFIED CHINESE_CHINA.AL32UTF8`
-
-4.重启PL/SQL
-
-
-
-
-
-### 存储过程
-
-```sql
--- 尚未测试
-create or replace PROCEDURE ZZY(demo in ats_back_ti % rowtype) is
-   v_back_ti  ats_back_ti % rowtype ;
-begin
-   v_back_ti := demo;
-   v_back_ti.d
-   dbms_output.put_line(v_back_ti.id);
-   dbms_output.put_line(v_back_ti.TRANSCODE);
-end 
-```
-
-
-```sql
--- 尚未测试
-create or replace procedure test_dblink(out_cursor out int)  Authid Current_User  as
-
-begin
-      --  test db link 数据库 连接
-     execute immediate 'create database link dblink1 
-     connect to  用户名 identified by "密码"
-     using ''192.168.1.100:1521/orcl'' ';
-
-   --    open out_cursor for 'SELECT * FROM A@dblink1';
-  
-
-  -- 返回个数值
-    out_cursor :=0;
-    execute immediate 'SELECT count(*) FROM A@dblink1'  into out_cursor ;
-    
-    -- 取消连接
-    execute immediate 'drop database link dblink1';
-    
-    return ;
-    
-end  ;
-```
 
 
 ## 元数据查询
@@ -1998,3 +1894,6 @@ EXCEPTION
 END;
 /
 ```
+
+
+## 存储过程
