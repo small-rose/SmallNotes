@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Js string
+title: Js String
 parent: JavaScript
 grand_parent: Front-end Dev
 nav_order: 13
 ---
 
- Here are JavaScript string examples .
+ Here are JavaScript String examples .
 {: .fs-6 .fw-300 }
 
 1. TOC

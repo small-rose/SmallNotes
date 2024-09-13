@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Js object
+title: Js Object
 parent: JavaScript
 grand_parent: Front-end Dev
 nav_order: 12
 ---
 
- Here are JavaScript object examples .
+ Here are JavaScript Object examples .
 {: .fs-6 .fw-300 }
 
 1. TOC
@@ -14,9 +14,6 @@ nav_order: 12
 
 
 # 一、Object 简介
-
-
-
 
 
 ## 1、js 对象

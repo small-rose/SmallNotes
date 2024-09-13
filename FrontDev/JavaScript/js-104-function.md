@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Js function
+title: Js Function
 parent: JavaScript
 grand_parent: Front-end Dev
 nav_order: 14
@@ -96,7 +96,7 @@ function getFunc(a, b) {
 - return ; 把控制权返回给页面。(返回 undefined)
 
 
-### 4、void 的使用
+## 4、void 的使用
 
 
 `javascript:void(0);` 该操作符指定要计算一个表达式但是不返回值。
@@ -114,7 +114,7 @@ void(alert("running!"));
 `javascript:void(0)`, 仅仅表示一个死链接。
 
 
-###  5、匿名函数
+##  5、匿名函数
 
 
 匿名函数：在 JavaScript 中，当把函数当做数据使用时，可以不设置名字。
@@ -137,7 +137,7 @@ var sub = function(a, b) {
 </script>
 ```
 
-###  6、回调函数
+##  6、回调函数
 
 什么是回调函数？
 
@@ -166,7 +166,7 @@ arr.forEach(function(v, i, arr){
 </script>
 ```
 
-### 7、函数的自调用(沙箱)
+## 7、函数的自调用(沙箱)
 
 function 前面加上一些操作符，这样 js 引擎在解析的时候就不会把它当成是函数声明了。
 
@@ -231,7 +231,7 @@ var a = 123; //外面并不能访问到这个 a
 </script>
 ```
 
-### 7、unction 构造函数（函数声明）
+## 8、Function 构造函数（函数声明）
 
 
 Function 是一个构造器， 能创建 Function 对象 ，即 JavaScript 中每个函数实际上都是 Function 对象。
@@ -285,7 +285,7 @@ var f = new Function('a','b','var c = a+b ; console.log(c); return c;');
 f(2);//以函数方式调用
 ```
 
-### 8、Function 与 function 的区别
+## 8、Function 与 function 的区别
 
 **Function 与 function 的区别**
 
@@ -297,7 +297,7 @@ f(2);//以函数方式调用
 
 
 
-### 9、递归函数
+## 9、递归函数
 
 递归函数：函数自己调用自己
 
@@ -316,7 +316,7 @@ function f1(){
 f1();
 ```
 
-### 10、默认值和函数参数
+## 10、默认值和函数参数
 
 Es6 的参数默认值
 
@@ -353,7 +353,7 @@ f1(function(){
 });
 ```
 
-### 11、高阶函数
+## 11、高阶函数
 
 高阶函数英文叫 Higher-order function。
 
