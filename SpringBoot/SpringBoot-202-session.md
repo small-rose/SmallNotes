@@ -148,6 +148,7 @@ Web Container会使用这个Session ID，找到对应的HttpSession，并将这�
 
 如果有就拿出来使用;如果没有就创建一个Session(相当于用户第一次访问)。
 
+**session 超时**
 
 由于会有越来越多的用户访问服务器，因此Session也会越来越多。
 
@@ -156,7 +157,6 @@ Web Container会使用这个Session ID，找到对应的HttpSession，并将这�
 如果超过了超时时间没访问过服务器，Session就自动失效了。
 
 这个就是开始设置session超时时间的必要性。
-
 
 
 ## session特点:
