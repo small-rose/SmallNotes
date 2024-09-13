@@ -108,6 +108,13 @@ oceanbase.__all_virtual_table表中的 index_type 字段判断索引的类型，
 索引有自己独立的分区
 
 
+## queuing表
+
+变成queuing表
+```
+ALTER TABLE AMS_APPLICATIONS_IDX TABLE MODE = 'queuing';
+```
+
 ## 表组
 
 一.表组相关命令
@@ -286,6 +293,7 @@ PLAN_TYPE 执行计划类型：
 - 3：分布式执行计划（Distribute）
 
 [gv$sql_audit视图字段说明](https://www.oceanbase.com/docs/enterprise-oceanbase-database-cn-10000000000356239)
+
 
 
 
