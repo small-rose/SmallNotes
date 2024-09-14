@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Js Envent
+title: Js onEnvent
 parent: JavaScript
 grand_parent: Front-end Dev
-nav_order: 10
+nav_order: 15
 ---
 
  Here are JavaScript examples .
@@ -366,7 +366,7 @@ btn8.mouseover = function(){
 btn9.mouseout = function(){
     console.log("鼠标out离开了");
 }
-</script>
+</script>                                   
 ```
 
 

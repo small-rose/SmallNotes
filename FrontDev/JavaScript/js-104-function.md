@@ -426,3 +426,266 @@ Javascript 只有两种作用域
 
 4.在 ECMASceipt5 的'use strict'模式下，如果变量没有使用 var 定义，会报错，
 
+
+# 三、函数总结
+
+
+（1）不能在非函数的代码块中声明函数。
+
+
+（2）name 属性和 length 属性。
+
+```javascript
+//name：函数的名称，Length：函数参数的个数
+function func(a,b){
+    console.log(func.name,func.length);
+}
+func(2,3);
+```
+
+（3）变量和函数的提升。
+
+（4）在 JavaScript 世界中，函数拥有一切传统函数的使用方式（声明和调用），而且可以做到像简单值一样赋值、传参、返回，这样的函数也称之为第一级函数（First-class Function）。JavaScript 中的函数还充当了类的构造函数的作用，同时又是一个 Function 类的实例(instance)。这样的多重身份让 JavaScript 的函数变得非常重要。
+
+（5）arguments 对象
+
+```javascript
+//arguments[0]:形式参数1，arguments[1]：形式参数2，arguments[2]：形式参数3
+function sum(){
+    return arguments[0] + arguments[1] + arguments[2];
+}
+console.log(sum(2,5,7));
+```
+
+（6）值传递和地址传递
+
+**值传递**
+
+```html
+<script>
+//函数的值传递，形式参数的改变不会影响到实际参数
+var num = 100 ;
+console.log("调用之前："+num);//100
+function change(num){
+    num = 888;
+    console.log("函数中输出："+num);//888
+}
+change(num); // num实际参数
+console.log("调用之后："+num);//100
+</script>
+```
+
+**地址传递**
+
+```html
+<script>
+//地址传递：实际参数和形式参数公用一个地址，形式参数的改变会影响到实际参数
+var arr = ["red","green","blue"];
+console.log("调用之前：arr'red'green","blue");
+
+function change(val){
+    val[0] = "yellow";
+    console.log("函数中输出：" + val);//"yelLow","green","blue"
+}
+change(arr);
+console.log("调用之后："+arr);//"yellow","green","blue"
+</script>
+```
+
+（7）函数的同名参数
+
+```javascript
+//同名参数：使用最后一个值
+function f1(a,a){
+    console.log(a);//undefined
+}
+f1(2);
+```
+
+（8）eval 函数
+
+`eval("字符串")`:可以计算字符串的值
+
+```javascript
+console.log(eval("3*6+7"));
+```
+
+（9）instanceof 类型检测
+
+```javascript
+function person(){
+    this.name = "halon";
+    this.age = 23;
+}
+
+var p1 = new person();
+console.log(p1 instanceof person);//true
+```
+（10）javascript 垃圾回收机制。
+
+对于其他语言来说，如 C,C++,需要开发者手动的来跟踪并管理内存。
+
+Javascript 具有自动垃圾回收机制，会定期进行垃圾回收。
+
+其原理就是找出那些不在被使用的变量，然后释放其所占有的内存。
+
+
+# 四、闭包
+
+## 1、什么是闭包
+
+闭包是解决什么问题的？
+
+```html
+<script>
+//在函数外部访问函数内部的局部变量
+function f1(){
+    var a = 100 ; 
+}
+f1();
+alert(a);//报错
+</script>
+```
+
+> 在函数外部无法访问函数内部的局部变量
+
+闭包：能够读取其他函数（外部函数）变量的函数（内部函数）就是闭包。
+
+
+## 2、闭包的分类
+
+
+
+（1）函数闭包
+
+```html
+<script>
+//闭包：能够访问其他函数（f2)变量的函数（f1）就是闭包
+function f1(){
+    var n = 99; //对于f2这个函数来说，n就是全局变量
+    function f2(){
+        n++; 
+        return n;
+    }
+    return f2
+};
+var result = f1();
+
+console.log(result());//100
+console.log(result());//101
+console.log(result());//102
+</script>
+```
+
+没有返回值时:
+
+```html
+<script>
+function f1(){
+    var n = 99;
+    function f2(){
+        n++;
+        console.log(n);
+    }
+    f2();
+}
+
+f1();//100
+f1();//100
+f1();//100
+</script>
+```
+
+（2）对象闭包
+
+```html
+<script>
+
+//对象闭包
+var name = "the window" ;
+//定对象
+var obj = { 
+    name:"myobject",
+    getName: function(){
+        return function(){
+            return this.name;//this指向window
+        }
+    }
+}
+// 我们调用obj.getName这个方法，我们将它赋值一个变量re，这个变量re在全局作用域，
+//那么re这个变量就属性window对象，所以这个this指向window对象
+var result = obj.getName();
+console.log(result());//the window
+
+</script>
+```
+
+
+
+## 3、闭包的特点和作用
+
+闭包的特点：
+
+- 特点 1：函数内部包含一个函数
+- 特点 2：内部函数可以使用外部函数的变量
+
+
+闭包的作用：
+
+- 一个就是可以读取函数内部的变量。
+- 另一个就是让这些变量的值始终保持在内存中。
+
+
+闭包的问题
+
+**内存泄漏**
+
+内存泄漏（Memory Leak）是指程序中己动态分配的堆内存由于某种原因程序未释放或无法释放，造成系统内存的浪费，导致程序运行速度减慢甚至系统崩溃等严重后果。
+
+
+## 4、闭包的实际应用
+
+没有使用闭包
+
+```html
+<ul>
+<li>第一行</li>
+<li>第二行</li>
+<li>第三行</li>
+</ul>
+<script>
+var oLi = document.querySelectorAll("li");//获取Li元素-是一个数组
+for( let i = 0; i<oLi.length; i++){
+    oLi[i].index = i;
+    oLi[i].onmouseover = function(){
+        oLi[i].style.background = "yellow";
+    }
+    oLi[i].onmouseout = function(){
+        oLi[i].style.background = "";
+    }
+}
+</script>
+```
+
+使用闭包
+
+```html
+<ul>
+<li>第一行</li>
+<li>第二行</li>
+<li>第三行</li>
+</ul>
+<script>
+var oLi = document.querySelectorAll("li");//获取Li元素-是一个数组
+for( let i = 0; i<oLi.length; i++){
+    oLi[i].onmouseover = showBgColor(i,"blue");
+    oLi[i].onmouseout = showBgColor(i,"");
+    
+    function showBgColor(i,color){
+        return function(){
+            oLi[i].style.background = color;
+        }
+    }
+}
+</script>
+```
