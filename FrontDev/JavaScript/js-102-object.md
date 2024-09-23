@@ -80,9 +80,9 @@ obj3.sex = "男";
 obj3.from = "洛阳";
 
 //添加方法
-obj3.fly = function(）{
+obj3.fly = function(){
     console.log("我会念经！")
-}；
+};
 obj3.fly();
 console.log(obj3);
 </script>
