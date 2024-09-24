@@ -1896,4 +1896,86 @@ END;
 ```
 
 
-## 存储过程
+## With As
+
+
+（1）搭配建表 `CREATE TABLE`使用
+
+```sql
+CREATE TABLE emp_analsys AS 
+
+WITH  tmp_data_info AS 
+  (SELECT 
+         NVL(ename,'unknow employee') AS ename, 
+         DECODE(deptno,10,'ACCOUNTING',20,'RESEARCH',30,'SALES',40,'OPERATIONS','no this department') AS dname,
+         substr(to_char(hiredate,'yyyy-mm-dd'),1,7) AS hiredate,
+         CASE WHEN sal <= 1000 THEN 'D' 
+              WHEN sal > 1000 AND sal <= 2000 THEN 'C'
+              WHEN sal > 2000 AND sal <= 3000 THEN 'B'
+              WHEN sal > 3000  THEN 'A'
+              ELSE 'unkown grade' 
+         END AS grade,
+         ROUND(sal,2) AS sal,
+         FLOOR(nvl(comm,0)) AS comm,
+         NVL(sal,0)+NVL(comm,0) AS total_sal
+     FROM emp WHERE deptno IN 
+     (SELECT DISTINCT deptno FROM dept))
+
+ SELECT * FROM tmp_data_info;
+```
+
+支持多个临时表使用
+
+```sql
+CREATE TABLE t_emp_info AS 
+WITH dept_info AS 
+(SELECT deptno AS deptno_1,dname FROM dept)
+,
+emp_info AS
+(SELECT empno AS empno_1,ename,job,deptno FROM emp)
+,
+other_info AS
+(SELECT empno,hiredate,NVL(sal,0)+NVL(comm,0) AS total_sal FROM emp )
+
+SELECT * FROM dept_info d LEFT JOIN emp_info e ON d.deptno_1=e.deptno RIGHT JOIN other_info o ON e.empno_1=o.empno ;
+```
+
+（1）搭配 `INSERT INTO`使用
+
+```sql
+INSERT INTO emp_analsys
+WITH  tmp_data_info AS 
+  (SELECT 
+         NVL(ename,'unknow employee') AS ename, 
+         DECODE(deptno,10,'ACCOUNTING',20,'RESEARCH',30,'SALES',40,'OPERATIONS','no this department') AS dname,
+         substr(to_char(hiredate,'yyyy-mm-dd'),1,7) AS hiredate,
+         CASE WHEN sal <= 1000 THEN 'D' 
+              WHEN sal > 1000 AND sal <= 2000 THEN 'C'
+              WHEN sal > 2000 AND sal <= 3000 THEN 'B'
+              WHEN sal > 3000  THEN 'A'
+              ELSE 'unkown grade' 
+         END AS grade,
+         ROUND(sal,2) AS sal,
+         FLOOR(nvl(comm,0)) AS comm,
+         NVL(sal,0)+NVL(comm,0) AS total_sal
+     FROM emp WHERE deptno IN 
+     (SELECT DISTINCT deptno FROM dept))
+
+ SELECT * FROM tmp_data_info;
+```
+
+支持多个临时表
+
+```sql
+INSERT INTO  t_emp_info
+WITH dept_info AS 
+(SELECT deptno AS deptno_1,dname FROM dept)
+,
+emp_info AS
+(SELECT empno AS empno_1,ename,job,deptno FROM emp)
+,
+other_info AS
+(SELECT empno,hiredate,NVL(sal,0)+NVL(comm,0) AS total_sal FROM emp )
+
+SELECT * FROM dept_info d LEFT JOIN emp_info e ON d.deptno_1=e.deptno RIGHT JOIN other_info o ON e.empno_1=o.empno ;
+```
